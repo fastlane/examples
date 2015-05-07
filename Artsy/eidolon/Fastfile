@@ -1,0 +1,111 @@
+fastlane_version "0.4.2" 
+
+desc "Build and prepare the app for testing"
+lane :build_for_test do
+  xcodebuild scheme: 'Kiosk', destination: "OS=8.1,name=iPad Air"
+end
+
+desc "Run all iOS tests on an iPad"
+lane :test do
+  xctest destination: "OS=8.1,name=iPad Air"
+end
+
+desc "Set all the API keys required for distribution"
+lane :oss do
+  keys = ['ArtsyAPIClientSecret', 
+    'ArtsyAPIClientKey', 
+    'HockeyProductionSecret', 
+    'HockeyBetaSecret', 
+    'MixpanelProductionAPIClientKey', 
+    'MixpanelStagingAPIClientKey', 
+    'CardflightAPIClientKey', 
+    'CardflightMerchantAccountToken', 
+    'StripePublishableKey']
+
+    commands = keys.map { |key|
+      command = "bundle exec pod keys set #{key} '-'"
+      if key == keys.first
+        command += " Eidolon"
+      end
+
+      command
+    }.join(' ; ')
+
+    sh "cd .. ; #{commands}"
+
+    cocoapods
+end
+
+desc "Build and prepare deployment"
+lane :build_for_deploy do
+  xcodebuild sdk: "iphoneos", configuration: "release"
+end
+
+desc "Release a new beta version on Hockey"
+desc "This action does the following:"
+desc ""
+desc "- Ensures a clean git status"
+desc "- Increment the build number"
+desc "- Build and sign the app"
+desc "- Upload the ipa file to hockey"
+desc "- Post a message to slack containing the download link"
+desc "- Commit and push the version bump"
+lane :deploy do 
+  # Make sure we start off with a clean slate
+  ensure_git_status_clean
+
+  # Increment build number to current date
+  build_number = Time.new.strftime("%Y.%m.%d")
+  increment_build_number build_number: build_number
+
+  # Set version number to the one at the top of the CHANGELOG
+  readme = File.read("../docs/CHANGELOG.md")
+  latest_version = readme.split("\n## ").first
+  first_line = latest_version.split("\n").first
+  version_number = first_line.split(" ")[1]
+
+  increment_version_number release_task: version_number
+
+  # Generate release notes from CHANGELOG
+  release_notes = latest_version.split("\n")[1..-1].join("\n")
+
+  # Build
+  ipa(
+    configuration: "Release",
+    destination: "build",
+    embed: "fastlane/Distribution_net.artsy.kiosk.beta.mobileprovision",
+    identity: "iPhone Distribution: ART SY INC",
+    clean: false,
+  )
+
+  # Push to Hockey
+  markdown_type = 1
+  hockey(
+    api_token: ENV['HOCKEY_API_TOKEN'],
+    notes_type: markdown_type,
+    notes: release_notes,
+  )
+
+  # Post message to slack
+  slack(
+    message: "There is a new version of the Kiosk app available. Download it at http://artsy.net/kioskbeta",
+    success: true,        # optional, defaults to true
+    payload: {            # optional, lets you specify any number of your own Slack attachments
+      'Version' => version_number,
+      'What\'s new' => release_notes,
+    },
+    default_payloads: [],
+  )
+
+  # Make sure our directory is clean, except for changes Fastlane has made
+  clean_build_artifacts
+
+  # Tag release and push to GitHub
+  commit_version_bump message: "Deploying version #{version_number}."
+  add_git_tag tag: version_number
+  push_to_git_remote
+end
+
+lane :storyboard_ids do
+  sh "cd .. ; bundle exec sbconstants Kiosk/Storyboards/StoryboardIdentifiers.swift --source-dir Kiosk/Storyboards --swift"
+end
