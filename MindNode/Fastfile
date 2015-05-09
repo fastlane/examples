@@ -1,0 +1,194 @@
+fastlane_version "1.0.0"
+ENV["SLACK_URL"] ||= "https://hooks.slack.com/services/..."
+
+def build_app
+  sigh # get the latest provisioning profile
+  project_file = 'iOS/MindNode for iOS.xcodeproj'
+  
+  increment_build_number(xcodeproj: project_file) # version bump
+
+  commit_version_bump(
+    message: 'Version Bump by fastlane',
+    xcodeproj: project_file,
+    force: true
+  )
+
+  push_to_git_remote
+
+  update_project_code_signing project_file # updates code signing to `sigh` result
+
+  ipa(
+    workspace: 'MindNode-iOS.xcworkspace',
+    scheme: 'MindNode for iOS (Release)'
+  )
+
+  reset_git_repo(
+    force: true,
+    files: [
+      "iOS/MindNode for iOS.xcodeproj/project.pbxproj"
+    ]
+  )
+end
+
+def ios_tests
+  begin
+    sh "cd .. && xctool test"
+  rescue => ex
+    puts ex
+    raise "iOS Unit Tests failed:\n\n #{ex.to_s}"
+  end
+end
+
+def mac_tests
+  # First clean the project, then test it
+  begin
+    xcclean(
+      workspace:  "MindNode-Mac.xcworkspace",
+      scheme: "MindNode for Mac",
+      destination: "platform=OS X"
+    )
+    xctest(
+      workspace:  "MindNode-Mac.xcworkspace",
+      scheme: "MindNode for Mac",
+      destination: "platform=OS X"
+    )
+  rescue => ex
+    raise "Mac Unit Tests failed:\n\n #{ex.to_s}"
+  end
+end
+
+def run_tests
+  ios_tests
+  mac_tests
+end
+
+
+################
+# All the lanes:
+################
+
+before_all do
+  run_tests
+end
+
+desc "Run both iOS and Mac Tests"
+lane :test do
+  # this is done in `before_all` already
+end
+
+
+platform :ios do
+
+  desc "Run the static analyzer on the iOS project"
+  lane :analyze do
+    analyze
+    # TODO: Analyze Mac as well, once this is running on Jenkins
+  end
+
+  desc "Create new screenshots for the App Store in all languages and device types"
+  desc "Additionally, this will add device frames around the screenshots and add the correct titles"
+  lane :screenshots do
+    snapshot
+    frameit(white: true)
+  end
+
+  desc "Build, sign and upload a new beta build to Apple TestFlight"
+  desc "This will **not** send an email to all testers, it will only be uploaded to the new TestFlight. "
+  lane :beta do
+    build_app
+    deliver(
+      skip_deploy: true, 
+      beta: true
+    )
+  end
+
+  desc "Build, sign and upload a new build to the App Store."
+  desc "This will do the following:"
+  desc ""
+  desc "- Create new screenshots and store them in `./fastlane/screenshots`"
+  desc "- Collect the app metadata from `./fastlane/metadata`"
+  desc "- Upload screenshots + app metadata"
+  desc "- Build, sign and upload the app"
+  desc ""
+  desc "This will **not** submit the app for review."
+
+  lane :appstore do
+    snapshot
+    build_app
+    deliver(
+      skip_deploy: true, 
+      force: true
+    )
+  end
+
+end
+
+platform :mac do
+
+  desc "[WIP] Upload App Metadata of the Mac App to iTunes Connect"
+  lane :metadata do
+    ENV['DELIVERFILE_PATH'] = File.join(Dir.pwd, 'Mac') # Mac specific app metadata
+    deliver(
+      skip_deploy: true, 
+      force: true
+    )
+  end
+  
+  desc "[WIP] Build, sign and upload a new Mac build to Hockey App"
+  lane :beta do
+    xcclean(
+      workspace:  "MindNode-Mac.xcworkspace",
+      scheme: "MindNode for Mac (β)",
+      destination: "platform=OS X"
+    )
+
+    output_path = "./build.xcarchive"
+    xcbuild(
+      workspace:  "MindNode-Mac.xcworkspace",
+      scheme: "MindNode for Mac (β)",
+      destination: "platform=OS X",
+      archive: true,
+      archive_path: output_path
+    )
+    
+    # `..` to get up out of the fastlane subfolder
+    app_path = File.join("..", output_path, "Products/Applications/MindNode β.app")
+    raise "Couldn't find .app file at path '#{app_path}'" unless File.exists?app_path
+    sh "zip -r './MindNode.app.zip' \"#{app_path}\""
+
+    hockey({
+      api_token: '...',
+      ipa: "./fastlane/MindNode.app.zip",
+      notes: 'Release Notes',
+      status: "2", # 2: make available to download
+      notify: "0", # 0: don't notify,
+      dsym: File.join(output_path, "dSYMs/MindNode β.app.dSYM"),
+      public_identifier: "..." # used to identify the app
+    })
+  end
+
+end
+
+
+################
+# Success/Error:
+################
+
+after_all do |lane|
+  # This block is called, only if the executed lane was successful
+  slack(
+    message: nil,
+    success: true,
+    default_payloads: [:test_result, :git_branch]
+  )
+
+  clean_build_artifacts
+end
+
+
+error do |lane, exception|
+  slack(
+    message: exception.to_s,
+    success: false
+  )
+end
