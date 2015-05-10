@@ -8,7 +8,7 @@ fastlane Example Setups
 This repository contains a few `fastlane` example setups that help you getting started.
 
 ### Artsy eidolon
-![artsy](Logos/artsy.png)
+![Artsy](Logos/Artsy.png)
 
 **[Standard]**
 
