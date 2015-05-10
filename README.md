@@ -27,7 +27,7 @@ Automated the beta upload to `hockey` which covers the following:
 
 *More information following soon*
 
-### [Advanced] MindNode
+### [Advanced] SunApps
 ![SunApps](Logos/SunApps.png)
 
 **Keywords**: Maintain and Deploy hundreds of apps, Automatic creation of Apps, produce, sigh, PEM, screenshots, remote configuration
