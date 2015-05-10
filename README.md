@@ -7,10 +7,8 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
-### Artsy eidolon
+### [Standard] Artsy eidolon
 ![Artsy](Logos/Artsy.png)
-
-**[Standard]**
 
 Automated the beta upload to `hockey` which covers the following:
 
