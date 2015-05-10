@@ -1,5 +1,5 @@
 <h3 align="center">
-  <img src="assets/fastlane_text.png" alt="fastlane Logo" />
+  <img src="Logos/fastlane_text.png" alt="fastlane Logo" />
 </h3>
 
 fastlane Example Setups
@@ -8,7 +8,7 @@ fastlane Example Setups
 This repository contains a few `fastlane` example setups that help you getting started.
 
 ### Artsy eidolon
-![artsy](assets/artsy.png)
+![artsy](Logos/artsy.png)
 
 **[Standard]**
 
