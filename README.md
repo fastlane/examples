@@ -1,7 +1,25 @@
-# Example fastlane setups
+<h3 align="center">
+  <img src="assets/fastlane_text.png" alt="fastlane Logo" />
+</h3>
 
-It's easier to get started with `fastlane` by taking a look at existing configurations. With [artsy](https://www.artsy.net/) being the first ones open sourcing their [Fastfile](https://github.com/artsy/eidolon/blob/master/fastlane/Fastfile).
+fastlane Example Setups
+=======================
+
+This repository contains a few `fastlane` example setups that help you getting started.
+
+### Artsy eidolon
+![artsy](assets/artsy.png)
+
+**[Standard]**
+
+Automated the beta upload to `hockey` which covers the following:
+
+- Incrementing the build number
+- Building and signing the app
+- Uploading the `ipa` file to `hockey`
+- Commiting and pusing of version bump
+- Post on Slack
+
 
 If you like [fastlane](https://fastlane.tools) and would like to help this project by sharing your `Fastfile`, feel free to submit a pull request :+1:
 
-Look at the file list on the top for a list of already added setups.
