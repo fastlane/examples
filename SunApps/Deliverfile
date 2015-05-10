@@ -1,0 +1,98 @@
+require 'open-uri'
+
+email 'felix@sunapps.net' # Apple ID
+
+url = "https://cms.sunapps.net/framework_versions/latest?platform=ios"
+framework_version = JSON.parse(open(url).read)
+
+# The URL below is password protected
+url = "https://cms.sunapps.net/all_apps_to_deploy.json?platform=ios&version=#{framework_version['version_number']}"
+apps = JSON.parse(open(url).read)
+
+app_id = Dir.pwd.split("/")[-2].to_i
+app = apps[app_id.to_s]
+
+# app now contains all app metadata:
+# "9": {
+#   "fullName": "SunPreviewer - SunApps App Builder",
+#   "shortName": "SunPreviewer",
+#   "description": {
+#       "de": "Diese App dient zum Einrichten der SunApp."
+#   },
+#   "identifier": "net.sunapps.9",
+#   "appleId": 804166646,
+#   "keywords": {
+#       "de": "sungolf,sunapps,sun,app,setup"
+#   },
+#   "marketingUrl": "http://sunapps.net",
+#   "supportUrl": "http://sunapps.net",
+#   "appChooser": true,
+#   "androidPackageName": "net.sunapps.Setup",
+#   "lastSubmittedVersion": {
+#       "android": "0.9.10",
+#       "ios": "0.9.9"
+#   },
+#   "iconUrl": "http://s3-eu-west-1.amazonaws.com/net.sunapps/assets/apps/icons/9/ios.png?1409921702"
+# }
+
+
+# The app identifier is required
+app_identifier "net.sunapps.#{app_id}"
+
+version framework_version['version_number']
+
+title(
+  'de-DE' => app["fullName"]
+)
+
+description(
+  'de-DE' => app["description"]["de"]
+)
+
+changelog(
+  'de-DE' => framework_version["public_description"]["de"]
+)
+
+keywords(
+  'de-DE' => app["keywords"]["de"].split(",")
+)
+
+privacy_url(
+  'de-DE' => 'http://privacy.sunapps.net'
+)
+
+marketing = 'https://sunapps.net'
+marketing = app['marketingUrl'] if app['marketingUrl'].to_s.length > 0
+marketing_url(
+  'de-DE' => marketing
+)
+
+support_url = 'https://support.sunapps.net'
+support_url = app['supportUrl'] if app['supportUrl'].to_s.length > 0
+support_url(
+  'de-DE' => support_url
+)
+
+app_icon "../Submission/AppIconFull.png"
+
+price_tier 0 # free app
+
+copyright "#{Time.now.year} SunApps GmbH"
+
+primary_category "Reference"
+
+secondary_category "Business"
+
+automatic_release true
+
+ratings_config_path "./ratings_config.json"
+
+app_review_information({
+  first_name: "Felix",
+  last_name: "Krause",
+  phone_number: "My Phone Number",
+  email_address: "felix@sunapps.net",
+  demo_user: "",
+  demo_password: "",
+  notes: ""
+})

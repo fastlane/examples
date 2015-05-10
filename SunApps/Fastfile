@@ -1,0 +1,78 @@
+require 'open-uri'
+
+url = "https://cms.sunapps.net/framework_versions/latest?platform=ios"
+framework_version = JSON.parse(open(url).read)
+
+# The URL below is password protected
+url = "https://cms.sunapps.net/all_apps_to_deploy.json?platform=ios&version=#{framework_version['version_number']}" 
+apps = JSON.parse(open(url).read)
+
+# Example `apps` array open the Deliverfile
+
+app_id = Dir.pwd.split("/")[-2].to_i
+app = apps[app_id.to_s]
+
+raise "Couldn't find app #{app_id}".red unless app
+
+before_all do
+  cocoapods
+end
+
+lane :test do
+  xctool
+  snapshot
+end
+
+
+def build_app
+  sh "rake prepare_release" # an internal rake task that prepares the app for the release
+
+  ipa(
+    workspace: "./Project.xcworkspace",
+    scheme: "Release"
+  )
+end
+
+
+lane :deploy do
+  snapshot
+  cert
+
+  produce(
+    produce_username: 'felix@sunapps.net',
+    produce_app_identifier: "net.sunapps.#{app_id}",
+    produce_app_name: app["fullName"],
+    produce_language: 'German',
+    produce_version: framework_version['version_number'],
+    produce_sku: app_id,
+    produce_team_name: 'SunApps GmbH' # only necessary when in multiple teams
+  )
+
+  # provisioning profile
+  sigh 
+  
+  # push notification profile    
+  pem(new_profile: Proc.new do |value|
+        # Code to upload PEM file to server
+      end)
+  increment_build_number
+
+  build_app
+
+  deliver # upload the app
+  frameit # add device frames to send them to the customer
+end
+
+after_all do
+  clean_build_artifacts
+  slack(
+    message: "App #{app_id} was successfully released!"
+  )
+end
+
+error do
+  slack(
+    message: "An error occured while deploying app #{app_id}",
+    success: false
+  )
+end

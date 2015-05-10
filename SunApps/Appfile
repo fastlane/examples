@@ -1,0 +1,2 @@
+app_identifier "net.sunapps.#{Dir.pwd.split('/')[-2]}"
+apple_id "felix@sunapps.net"
