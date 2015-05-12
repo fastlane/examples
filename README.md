@@ -77,6 +77,14 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Push Notifications
 - Version Bump & Git Actions
 
+<p align="center">
+  <a href="/ProductHunt/">Overview</a> &bull; 
+  <a href="/ProductHunt/Fastfile">Fastfile</a> &bull; 
+  <a href="/ProductHunt/Deliverfile">Deliverfile</a> &bull; 
+  <a href="/ProductHunt/metadata">metadata</a>
+</p>
+----
+
 
 ### Be My Eyes
 ![Be My Eyes Logo](Logos/BeMyEyes.png)
@@ -118,7 +126,7 @@ A description on how the setup works is available in the [Overview](/SunApps).
   <a href="/SunApps/Deliverfile">Deliverfile</a> &bull; 
   <a href="/SunApps/Snapfile">Snapfile</a> &bull; 
   <a href="/SunApps/Appfile">Appfile</a> &bull;
-  <a href="/SunApps/snapshot.js">snapshot.js</a> &bull;
+  <a href="/SunApps/snapshot.js">snapshot.js</a>
 </p>
 ----
 

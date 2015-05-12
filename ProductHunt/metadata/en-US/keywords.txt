@@ -1,0 +1,6 @@
+all
+the
+keywords
+in
+new
+lines
