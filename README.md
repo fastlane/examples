@@ -83,7 +83,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/BeMyEyes/">Overview</a> &bull; 
   <a href="/BeMyEyes/Fastfile">Fastfile</a> &bull; 
   <a href="/BeMyEyes/Deliverfile">Deliverfile</a> &bull; 
-  <a href="/BeMyEyes/actions/get_global_value">get_global_value</a>
+  <a href="/BeMyEyes/actions/get_global_value.rb">get_global_value</a>
 </p>
 ----
 
