@@ -20,8 +20,12 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 --
 
-- [Overview](/Artsy/eidolon)
-- [Fastfile](/Artsy/eidolon/Fastfile)
+<p align="center">
+  <a href="/Artsy/eidolon">Overview</a> &bull; 
+  <a href="/Artsy/eidolon/Fastfile">Fastfile</a> &bull;
+</p>
+
+--
 
 
 ### MindNode
