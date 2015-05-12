@@ -26,6 +26,27 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 --
 
+### Wikipedia by Wikimedia Foundation
+![Wikmedia Logo](Logos/Wikimedia.png)
+
+:green_book: *Advanced - Multiple Environments*
+
+- Different Bundle Identifiers per `lane`
+- Advanced Testing
+- Hockey Deployment
+- App Store Deployment
+- Custom `fastlane` actions like automatic change-logs based on git
+
+--
+
+<p align="center">
+  <a href="/Wikipedia/">Overview</a> &bull; 
+  <a href="/Wikipedia/Fastfile">Fastfile</a> &bull; 
+  <a href="/Wikipedia/Deliverfile">Deliverfile</a> &bull; 
+  <a href="/Wikipedia/Appfile">Appfile</a> &bull; 
+  <a href="/Wikipedia/Wikipedia/metadata/">Metadata</a>
+</p>
+--
 
 ### MindNode
 ![MindNode](Logos/MindNode.png)
@@ -33,7 +54,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 :computer: *Advanced Universal Setup*
 
 - Mac and iOS Universal App
-- App Store deployment
+- App Store Deployment
 - Automated Screenshots
 - Custom `xcodebuild`
 
