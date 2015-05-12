@@ -10,12 +10,11 @@ This repository contains a few `fastlane` example setups that help you getting s
 ### Artsy eidolon
 ![Artsy](Logos/Artsy.png)
 
-:green_heart: **Easy Setup**
+:green_heart: **Standard Setup**
 
 - Building and Signing of the iOS App
-- Version Bump
+- Version Bump & Git Actions
 - Hockey Distribution
-- Git Actions
 - Production Keys
 
 ----
@@ -68,14 +67,25 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
+### ProductHunt
+![ProductHunt Logo](Logos/ProductHunt.png)
+
+:chart_with_upwards_trend: **Standard Setup**
+
+- App Store and TestFlight Deployment
+- Managing of Provisioning Profiles
+- Push Notifications
+- Version Bump & Git Actions
+
+
 ### Be My Eyes
 ![Be My Eyes Logo](Logos/BeMyEyes.png)
 
+:eyes: **Standard Setup**
+
 - App Store and TestFlight Distribution
 - Local action `get_global_value`
-- Custom scripts to extend functionality
-- Version bump
-- Git Actions
+- Version Bump & Git Actions
 
 ----
 
