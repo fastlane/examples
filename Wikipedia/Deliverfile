@@ -1,0 +1,13 @@
+###################### Available Options ######################
+# If you want to have even more control, check out the documentation
+# https://github.com/KrauseFx/deliver/blob/master/Deliverfile.md
+
+default_language "en-US"
+
+# Since this file is eval'd, we need to add this file's directory to $LOAD_PATH
+$:.unshift File.dirname(__FILE__)
+require 'lib/utils.rb'
+
+automatic_release false
+
+copyright "#{Time.now.year} Wikimedia Foundation"

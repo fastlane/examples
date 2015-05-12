@@ -1,0 +1,17 @@
+# Team
+team_id "AKK7J2GV64"
+team_name "Wikimedia Foundation"
+
+# Use different bundle identifiers per lane
+
+for_lane 'ios alpha' do
+  app_identifier "org.wikimedia.wikipedia.tfalpha"
+end
+
+for_lane 'ios beta' do
+  app_identifier "org.wikimedia.wikipedia.tfbeta"
+end
+
+for_lane 'ios store' do
+  app_identifier "org.wikimedia.wikipedia"
+end
