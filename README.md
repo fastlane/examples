@@ -18,13 +18,13 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Git Actions
 - Production Keys
 
---
+----
 
 <p align="center">
   <a href="/Artsy/eidolon">Overview</a> &bull; 
   <a href="/Artsy/eidolon/Fastfile">Fastfile</a>
 </p>
---
+----
 
 ### Wikipedia by Wikimedia Foundation
 ![Wikmedia Logo](Logos/Wikimedia.png)
@@ -37,7 +37,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 - App Store Deployment
 - Custom `fastlane` actions like automatic change-logs based on git
 
---
+----
 
 <p align="center">
   <a href="/Wikipedia/">Overview</a> &bull; 
@@ -46,7 +46,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Wikipedia/Appfile">Appfile</a> &bull; 
   <a href="/Wikipedia/Wikipedia/metadata/">Metadata</a>
 </p>
---
+----
 
 ### MindNode
 ![MindNode](Logos/MindNode.png)
@@ -56,7 +56,17 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Mac and iOS Universal App
 - App Store Deployment
 - Automated Screenshots
+- Copying of example data for screenshots
 - Custom `xcodebuild`
+
+----
+
+<p align="center">
+  <a href="/MindNode/">Overview</a> &bull; 
+  <a href="/MindNode/Fastfile">Fastfile</a> &bull; 
+  <a href="/Wikipedia/Snapfile">Snapfile</a> &bull; 
+</p>
+----
 
 ### SunApps
 ![SunApps](Logos/SunApps.png)
