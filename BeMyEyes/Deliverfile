@@ -1,0 +1,64 @@
+baseLanguage = "en-US"
+
+supportedLanguages = {
+  "da-DK" => "da",
+  "de-DE" => "de",
+  "el-GR" => "el",
+  "es-ES" => "es",
+  "fi-FI" => "fi",
+  "fr-FR" => "fr",
+  "it-IT" => "it",
+  "ko-KR" => "ko",
+  "nl-NL" => "nl",
+  "no-NO" => "nb",
+  "pt-BR" => "pt-BR",
+  "pt-PT" => "pt",
+  "ru-RU" => "ru",
+  "sv-SE" => "sv",
+  "tr-TR" => "tr",
+  "vi-VI" => "vi",
+  "cmn-Hans" => "zh-Hans",
+  "cmn-Hant" => "zh-Hant",
+}
+
+def hashToAllLanguages(baseKey, baseValue, allKeys)
+  hashey = { baseKey => baseValue }
+  allKeys.each { |key, value|
+    hashey[key] = baseValue
+  }
+  return hashey
+end
+
+# TITLE
+baseTitle = ENV["BME_APP_TITLE"] # Environment variable is set in the 'Fastfile'
+title(hashToAllLanguages(baseLanguage, baseTitle, supportedLanguages))
+
+# KEYWORDS
+baseKeywords = [ "accessible", "blind", "impaired", "help", "vision", "voiceover", "volunteer", "bemyeyes", "taptapsee"]
+keywords(hashToAllLanguages(baseLanguage, baseKeywords, supportedLanguages))
+
+# CHANGELOG
+baseChangelog = "Added languages Thai, Afrikaans, Azerbaijani, Catalan, Estonian, Lithuanian."
+changelog(hashToAllLanguages(baseLanguage, baseChangelog, supportedLanguages))
+
+# DESCRIPTION
+descriptionHash = { 
+  baseLanguage => "Be the eyes for a blind person in need of help remotely through a live video connection if you are sighted or be assisted by the network of sighted users if you are blind.\n\nBe My Eyes is all about contributing to and benefiting from small acts of kindness, so hop on board and get involved!\n\nBlind users can request help from a sighted person and the sighted users will then be called for help. As soon as the first sighted user accepts the request for help a live audio-video connection will be set up between the two and the sighted user can tell the blind person what she sees when the blind user points his phone at something using the rear-facing camera.\n\nAs a sighted user you don't need to worry about missing a call and 'leave a blind person hanging' - you are a part of the bigger Be My Eyes helper-network and we will find the next available sighted person in the network. The challenges that the blind person needs help with can be anything from knowing the expiry date on the milk to getting help crossing the street.\n\nNote: We encourage blind users to be patient when requesting help because we rely on real people to help you.\n\n- Live audio-video connection between blind and sighted users\n- Add the languages you know under settings\n- An easy way you can make a difference for blind people" 
+}
+supportedLanguages.each { |key, value|
+  filename = "../BeMyEyes/Localization/AppStoreDescriptions/" + value + ".lproj/AppStore.txt"
+  descriptionHash[key] = File.file?(filename) ? File.read(filename) : descriptionHash[baseLanguage]
+}
+description(descriptionHash)
+
+
+###################### Screenshots ######################
+# Store all screenshots in the ./screenshots folder separated
+# by language. If you use snapshot, this happens automatically
+
+# Copy baseLanugage screenshots to the rest of the languages
+supportedLanguages.each { |key, value|
+  FileUtils.cp_r "./screenshots/" + baseLanguage + "/.", "./screenshots/" + key
+}
+
+screenshots_path "./screenshots/"

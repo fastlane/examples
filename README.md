@@ -34,7 +34,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Different Bundle Identifiers per `lane`
 - Advanced Testing
 - Hockey Deployment
-- App Store Deployment
+- App Store and TestFlight Deployment
 - Custom `fastlane` actions like automatic change-logs based on git
 
 ----
@@ -54,7 +54,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 :computer: **Advanced iOS/Mac Setup**
 
 - Mac and iOS Universal App
-- App Store Deployment
+- App Store and TestFlight Deployment
 - Automated Screenshots
 - Copying of example data for screenshots
 - Custom `xcodebuild`
@@ -65,6 +65,25 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/MindNode/">Overview</a> &bull; 
   <a href="/MindNode/Fastfile">Fastfile</a> &bull; 
   <a href="/Wikipedia/Snapfile">Snapfile</a>
+</p>
+----
+
+### Be My Eyes
+![Be My Eyes Logo](Logos/BeMyEyes.png)
+
+- App Store and TestFlight Distribution
+- Local action `get_global_value`
+- Custom scripts to extend functionality
+- Version bump
+- Git Actions
+
+----
+
+<p align="center">
+  <a href="/BeMyEyes/">Overview</a> &bull; 
+  <a href="/BeMyEyes/Fastfile">Fastfile</a> &bull; 
+  <a href="/BeMyEyes/Deliverfile">Deliverfile</a> &bull; 
+  <a href="/BeMyEyes/actions/get_global_value">get_global_value</a>
 </p>
 ----
 

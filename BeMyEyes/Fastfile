@@ -1,0 +1,124 @@
+# Customise this file, documentation can be found here:
+# https://github.com/krausefx/fastlane#customise-the-fastfile
+
+# Change the syntax highlighting to Ruby
+
+# All lines starting with a # are ignored when running `fastlane`
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.0.0"
+
+before_all do
+  slack_url = get_global_value(key: "BMESlackUrl")
+  ENV["SLACK_URL"] = slack_url
+  ENV["BME_APP_TITLE"] = "Be My Eyes – Helping blind see"
+end
+
+lane :increment_build do 
+  increment_build_number
+  commit_version_bump
+end
+
+lane :increment_version_patch do 
+  increment_version_number(
+    bump_type: "patch"
+  )
+  commit_version_bump
+end
+
+lane :increment_version_minor do 
+  increment_version_number(
+    bump_type: "minor"
+  )
+  commit_version_bump
+end
+
+lane :increment_version_major do 
+  increment_version_number(
+    bump_type: "major"
+  )
+  commit_version_bump
+end
+
+lane :translate do
+  projectKey = get_global_value(key: "BMECrowdInProjectKey")
+  Helper.log.info "Update English files on CrowdIn"
+  sh "./../Scripts/upload_translations.py #{projectKey} -u"
+  Helper.log.info "Add new English files on CrowdIn"
+  sh "./../Scripts/upload_translations.py #{projectKey} -a"
+  Helper.log.info "Process translations on CrowdIn"
+  sh "./../Scripts/export_translations.py #{projectKey}"
+  Helper.log.info "Download translations from CrowdIn"
+  sh "./../Scripts/update_translations.py -p #{projectKey}"
+  Helper.log.info "Update translation keys"
+  sh "cd ..
+  Scripts/miaw -g -w --no-date -d -o BeMyEyes/Source/"
+end
+
+lane :beta_dev do
+  ipa(
+    scheme: "BeMyEyes Development",
+    configuration: "ReleaseDev",
+  )
+  ENV["BME_APP_TITLE"] = "Be My Eyes – Alpha"
+  deliver(beta: true)
+  
+  slack(
+    message: "New Development (Alpha) version pushed to TestFlight.",
+    default_payloads: [:git_branch, :git_author]
+  )
+end
+
+lane :beta_staging do
+  ipa(
+    scheme: "BeMyEyes Staging",
+    configuration: "ReleaseStaging",
+  )
+  ENV["BME_APP_TITLE"] = "Be My Eyes – Beta"
+  deliver(
+     beta: true
+  )
+  slack(
+    message: "New Staging (Beta) version pushed to TestFlight.",
+    default_payloads: [:git_branch, :git_author]
+  )
+end
+
+lane :beta_production do
+  ipa(
+    scheme: "BeMyEyes",
+    configuration: "Release",
+  )
+  deliver(
+    beta: true
+  )
+  slack(
+    message: "New Production version pushed to TestFlight.",
+    default_payloads: [:git_branch, :git_author]
+  )
+end
+
+lane :production do
+  ipa(
+    scheme: "BeMyEyes",
+    configuration: "Release",
+  )
+  deliver(
+    skip_deploy: true
+  )
+  slack(
+    message: "New Production version pushed to App Store.",
+    default_payloads: [:git_branch, :git_author]
+  )
+end
+
+
+after_all do |lane|
+  notify "Fastlane finished '#{lane}'" # Mac OS X Notification
+end
+
+
+error do |lane, exception|
+  # Something bad happened
+end
