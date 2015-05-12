@@ -16,8 +16,9 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Git Actions
 - Production Keys
 
-[Overview](/Artsy/eidolon)
-[Fastfile](/Artsy/eidolon/Fastfile)
+[:hamburger: Overview](/Artsy/eidolon)
+
+[:hamburger: Fastfile](/Artsy/eidolon/Fastfile)
 
 
 ### MindNode
