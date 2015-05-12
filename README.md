@@ -22,9 +22,8 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 <p align="center">
   <a href="/Artsy/eidolon">Overview</a> &bull; 
-  <a href="/Artsy/eidolon/Fastfile">Fastfile</a> &bull;
+  <a href="/Artsy/eidolon/Fastfile">Fastfile</a>
 </p>
-
 --
 
 
