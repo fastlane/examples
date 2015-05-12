@@ -10,7 +10,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ### Artsy eidolon
 ![Artsy](Logos/Artsy.png)
 
-:green_heart: *Easy Setup*
+:green_heart: **Easy Setup**
 
 - Building and Signing of the iOS App
 - Version Bump
@@ -29,7 +29,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ### Wikipedia by Wikimedia Foundation
 ![Wikmedia Logo](Logos/Wikimedia.png)
 
-:green_book: *Advanced - Multiple Environments*
+:green_book: **Advanced - Multiple Environments**
 
 - Different Bundle Identifiers per `lane`
 - Advanced Testing
@@ -51,7 +51,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ### MindNode
 ![MindNode](Logos/MindNode.png)
 
-:computer: *Advanced Universal Setup*
+:computer: **Advanced iOS/Mac Setup**
 
 - Mac and iOS Universal App
 - App Store Deployment
@@ -61,7 +61,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ### SunApps
 ![SunApps](Logos/SunApps.png)
 
-:wrench: *App Factory*
+:wrench: **App Factory**
 
 - Maintain and Deploy hundreds of Apps
 - Automatically create new Apps
