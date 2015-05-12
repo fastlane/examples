@@ -79,6 +79,8 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Screenshots
 - Remote configuration of `Fastfile` and `snapshot` scripts
 
+A description on how the setup works is available in the [Overview](/SunApps).
+
 ----
 
 <p align="center">
@@ -90,8 +92,6 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/SunApps/snapshot.js">snapshot.js</a> &bull;
 </p>
 ----
-
-----------
 
 If you like [fastlane](https://fastlane.tools) and would like to help this project by sharing your `Fastfile`, feel free to submit a pull request :+1:
 
