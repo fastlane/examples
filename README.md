@@ -44,7 +44,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Wikipedia/Fastfile">Fastfile</a> &bull; 
   <a href="/Wikipedia/Deliverfile">Deliverfile</a> &bull; 
   <a href="/Wikipedia/Appfile">Appfile</a> &bull; 
-  <a href="/Wikipedia/Wikipedia/metadata/">Metadata</a>
+  <a href="/Wikipedia/metadata/">Metadata</a>
 </p>
 ----
 
