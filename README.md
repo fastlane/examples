@@ -7,27 +7,27 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
-### [Standard] Artsy eidolon
+### Artsy eidolon
 ![Artsy](Logos/Artsy.png)
 
-**Keywords**: Hockey, Version Bump, Git, Slack, Production Keys
+- Building and Signing of the iOS App
+- Version Bump
+- Hockey Distribution
+- Git Actions
+- Production Keys
 
-Automated the beta upload to `hockey` which covers the following:
+[Overview](/Artsy/eidolon)
+[Fastfile](/Artsy/eidolon/Fastfile)
 
-- Incrementing the build number
-- Building and signing the app
-- Uploading the `ipa` file to `hockey`
-- Commiting and pusing of version bump
-- Post on Slack
 
-### [Advanced] MindNode
+### MindNode
 ![MindNode](Logos/MindNode.png)
 
 **Keywords**: Mac and iOS universal app, App Store deployment, Screenshots, custom xcodebuild
 
 *More information following soon*
 
-### [Advanced] SunApps
+### SunApps
 ![SunApps](Logos/SunApps.png)
 
 **Keywords**: Maintain and Deploy hundreds of apps, Automatic creation of Apps, produce, sigh, PEM, screenshots, remote configuration
