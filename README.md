@@ -68,7 +68,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
-### [ProductHunt](https://www.producthunt.com/apps/ios)
+### [Product Hunt](https://www.producthunt.com/apps/ios)
 ![ProductHunt Logo](Logos/ProductHunt.png)
 
 :chart_with_upwards_trend: **Standard Setup**
