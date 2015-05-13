@@ -1,0 +1,49 @@
+{
+  "default": {
+    "keyword": {
+      "font": "./fonts/AlwynNewRd-Rg.otf"
+    },
+    "title": {
+      "font": "./fonts/AlwynNewRd-Th.otf",
+      "color": "#545454"
+    },
+    "background": "Mac.jpg",
+    "padding": 0,
+    "offset": {
+      "offset": "+676+479",
+      "titleHeight": 320
+    }
+  },
+
+
+  "data": [
+    {
+      "filter": "Brainstorming",
+      "keyword": {
+        "color": "#d21559"
+      }
+    },
+    {
+      "filter": "Organizing",
+      "keyword": {
+        "color": "#feb909"
+      }
+    },
+    {
+      "filter": "Sharing",
+      "keyword": {
+        "color": "#aa4dbc"
+      }
+    },
+    {
+      "filter": "Styling",
+      "keyword": {
+        "color": "#31bb48"
+      },
+      "offset": {
+        "offset": "+390+366",
+        "width": 2095
+      }
+    }
+  ]
+}

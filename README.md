@@ -65,6 +65,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/MindNode/MindNode.js">MindNode.js</a> &bull; 
   <a href="/MindNode/screenshots">screenshots</a> &bull; 
   <a href="/MindNode/screenshots/Framefile.json">Framefile.json</a>
+  <a href="/MindNode/mac">MacScreenshots</a>
 </p>
 ----
 
