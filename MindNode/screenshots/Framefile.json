@@ -1,0 +1,41 @@
+{
+  "default": {
+    "keyword": {
+      "font": "./fonts/MyFont-Rg.otf"
+    },
+    "title": {
+      "font": "./fonts/MyFont-Th.otf",
+      "color": "#545454"
+    },
+    "background": "./background.jpg",
+    "padding": 50
+  },
+
+
+  "data": [
+    {
+      "filter": "Brainstorming",
+      "keyword": {
+        "color": "#d21559"
+      }
+    },
+    {
+      "filter": "Organizing",
+      "keyword": {
+        "color": "#feb909"
+      }
+    },
+    {
+      "filter": "Sharing",
+      "keyword": {
+        "color": "#aa4dbc"
+      }
+    },
+    {
+      "filter": "Styling",
+      "keyword": {
+        "color": "#31bb48"
+      }
+    }
+  ]
+}
