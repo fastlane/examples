@@ -7,7 +7,7 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
-### Artsy eidolon
+### [Artsy eidolon](https://github.com/artsy/eidolon)
 ![Artsy](Logos/Artsy.png)
 
 :green_heart: **Standard Setup**
@@ -24,7 +24,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
-### Wikipedia by Wikimedia Foundation
+### [Wikipedia](https://github.com/wikimedia/apps-ios-wikipedia/) by Wikimedia Foundation
 ![Wikmedia Logo](Logos/Wikimedia.png)
 
 :green_book: **Advanced - Multiple Environments**
@@ -45,7 +45,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
-### MindNode
+### [MindNode](https://mindnode.com/)
 ![MindNode](Logos/MindNode.png)
 
 :computer: **Advanced iOS/Mac Setup**
@@ -55,7 +55,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Automated Screenshots
 - Screenshot Framing & Adding of Titles
 - Copying of example data for screenshots
-- Custom `xcodebuild`
+- Custom `xcodebuild` command
 
 
 <p align="center">
@@ -68,7 +68,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
-### ProductHunt
+### [ProductHunt](https://www.producthunt.com/apps/ios)
 ![ProductHunt Logo](Logos/ProductHunt.png)
 
 :chart_with_upwards_trend: **Standard Setup**
@@ -87,7 +87,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 
-### Be My Eyes
+### [Be My Eyes](http://www.bemyeyes.org/)
 ![Be My Eyes Logo](Logos/BeMyEyes.png)
 
 :eyes: **Standard Setup**
@@ -105,7 +105,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
-### SunApps
+### [SunApps](https://sunapps.net)
 ![SunApps](Logos/SunApps.png)
 
 :wrench: **App Factory**
