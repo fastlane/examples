@@ -17,7 +17,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Hockey Distribution
 - Production Keys
 
-----
 
 <p align="center">
   <a href="/Artsy/eidolon">Overview</a> &bull; 
@@ -36,7 +35,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 - App Store and TestFlight Deployment
 - Custom `fastlane` actions like automatic change-logs based on git
 
-----
 
 <p align="center">
   <a href="/Wikipedia/">Overview</a> &bull; 
@@ -58,7 +56,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Copying of example data for screenshots
 - Custom `xcodebuild`
 
-----
 
 <p align="center">
   <a href="/MindNode/">Overview</a> &bull; 
@@ -95,7 +92,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Local action `get_global_value`
 - Version Bump & Git Actions
 
-----
 
 <p align="center">
   <a href="/BeMyEyes/">Overview</a> &bull; 
@@ -118,7 +114,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 A description on how the setup works is available in the [Overview](/SunApps).
 
-----
 
 <p align="center">
   <a href="/SunApps/">Overview</a> &bull; 
