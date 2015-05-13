@@ -53,6 +53,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Mac and iOS Universal App
 - App Store and TestFlight Deployment
 - Automated Screenshots
+- Screenshot Framing & Adding of Titles
 - Copying of example data for screenshots
 - Custom `xcodebuild`
 
@@ -60,7 +61,10 @@ This repository contains a few `fastlane` example setups that help you getting s
 <p align="center">
   <a href="/MindNode/">Overview</a> &bull; 
   <a href="/MindNode/Fastfile">Fastfile</a> &bull; 
-  <a href="/Wikipedia/Snapfile">Snapfile</a>
+  <a href="/MindNode/Snapfile">Snapfile</a> &bull; 
+  <a href="/MindNode/MindNode.js">MindNode.js</a> &bull; 
+  <a href="/MindNode/screenshots">screenshots</a> &bull; 
+  <a href="/MindNode/screenshots/Framefile.json">Framefile.json</a>
 </p>
 ----
 
