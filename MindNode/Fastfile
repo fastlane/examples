@@ -127,10 +127,10 @@ platform :mac do
 
   desc "[WIP] Upload App Metadata of the Mac App to iTunes Connect"
   lane :metadata do
-    ENV['DELIVERFILE_PATH'] = File.join(Dir.pwd, 'Mac') # Mac specific app metadata
     deliver(
       skip_deploy: true, 
-      force: true
+      force: true,
+      deliver_file_path: File.join(Dir.pwd, 'Mac') # Mac specific app metadata)
     )
   end
   
