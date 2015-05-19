@@ -8,7 +8,7 @@ fastlane Example Setups
 This repository contains a few `fastlane` example setups that help you getting started.
 
 ### [Artsy eidolon](https://github.com/artsy/eidolon)
-![Artsy](Logos/Artsy.png)
+[![Artsy](Logos/Artsy.png)](https://github.com/artsy/eidolon)
 
 :green_heart: **Standard Setup**
 
@@ -25,7 +25,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [Wikipedia](https://github.com/wikimedia/apps-ios-wikipedia/) by Wikimedia Foundation
-![Wikmedia Logo](Logos/Wikimedia.png)
+[![Wikmedia Logo](Logos/Wikimedia.png)](https://github.com/wikimedia/apps-ios-wikipedia)
 
 :green_book: **Advanced - Multiple Environments**
 
@@ -46,7 +46,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [MindNode](https://mindnode.com/)
-![MindNode](Logos/MindNode.png)
+[![MindNode](Logos/MindNode.png)](https://mindnode.com/)
 
 :computer: **Advanced iOS/Mac Setup**
 
@@ -70,7 +70,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [Product Hunt](https://www.producthunt.com/apps/ios)
-![ProductHunt Logo](Logos/ProductHunt.png)
+[![ProductHunt Logo](Logos/ProductHunt.png)](https://www.producthunt.com/apps/ios)
 
 :chart_with_upwards_trend: **Standard Setup**
 
@@ -89,7 +89,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 
 ### [Be My Eyes](http://www.bemyeyes.org/)
-![Be My Eyes Logo](Logos/BeMyEyes.png)
+[![Be My Eyes Logo](Logos/BeMyEyes.png)](http://www.bemyeyes.org/)
 
 :eyes: **Standard Setup**
 
@@ -107,7 +107,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [SunApps](https://sunapps.net)
-![SunApps](Logos/SunApps.png)
+[![SunApps](Logos/SunApps.png)](https://sunapps.net)
 
 :wrench: **App Factory**
 
