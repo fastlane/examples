@@ -1,8 +1,7 @@
-fastlane_version "1.0.0"
 ENV["SLACK_URL"] ||= "https://hooks.slack.com/services/..."
+fastlane_version "1.3.0"
 
 def build_app
-  sigh # get the latest provisioning profile
   project_file = 'iOS/MindNode for iOS.xcodeproj'
   
   increment_build_number(xcodeproj: project_file) # version bump
@@ -12,10 +11,28 @@ def build_app
     xcodeproj: project_file,
     force: true
   )
-
+  
   push_to_git_remote
+  
+  # Get the latest provisionnig profiles from the Dev Portal and 
+  # update the project settings for each of the targets
+  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitextension", output_path: "/tmp")
+  update_project_provisioning(
+    xcodeproj: project_file,
+    build_configuration_filter: ".*WatchKit Extension.*"
+  )
 
-  update_project_code_signing project_file # updates code signing to `sigh` result
+  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitapp", output_path: "/tmp")
+  update_project_provisioning(
+    xcodeproj: project_file,
+    build_configuration_filter: ".*WatchKit App.*"
+  )
+
+  sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
+  update_project_provisioning(
+    xcodeproj: project_file,
+    build_configuration_filter: "MindNodeTouch"
+  )
 
   ipa(
     workspace: 'MindNode-iOS.xcworkspace',
@@ -89,8 +106,15 @@ platform :ios do
   desc "Additionally, this will add device frames around the screenshots and add the correct titles"
   lane :screenshots do
     snapshot
-    frameit(white: true)
+    frameit(white: true, path: './fastlane/screenshots')
   end
+
+  desc "Uploads metadata only - no ipa file will be uploaded"
+  desc "You'll get a summary of the collected metadata before it's uploaded"
+  lane :upload_metadata do
+    deliver(metadata_only: true)
+  end
+
 
   desc "Build, sign and upload a new beta build to Apple TestFlight"
   desc "This will **not** send an email to all testers, it will only be uploaded to the new TestFlight. "
@@ -124,12 +148,26 @@ platform :ios do
 end
 
 platform :mac do
-
   desc "[WIP] Upload App Metadata of the Mac App to iTunes Connect"
   lane :metadata do
     deliver(
       skip_deploy: true, 
       force: true,
+      deliver_file_path: File.join(Dir.pwd, 'Mac') # Mac specific app metadata
+    )
+  end
+
+  desc "Adds frames around the screenshots located in `./fastlane/Mac/screenshots`"
+  desc "This will not generate new screenshots, but only frame the existing ones"
+  lane :screenshots do
+    frameit(path: './fastlane/Mac/screenshots', force_device_type: "Mac")
+  end
+
+  desc "Uploads metadata only (Mac) - no binary will be uploaded"
+  desc "You'll get a summary of the collected metadata before it's uploaded"
+  lane :upload_metadata do
+    deliver(
+      metadata_only: true,
       deliver_file_path: File.join(Dir.pwd, 'Mac') # Mac specific app metadata)
     )
   end
@@ -151,20 +189,20 @@ platform :mac do
       archive_path: output_path
     )
     
+    # Zip the generated app to upload it to hockey
     # `..` to get up out of the fastlane subfolder
     app_path = File.join("..", output_path, "Products/Applications/MindNode β.app")
-    raise "Couldn't find .app file at path '#{app_path}'" unless File.exists?app_path
-    sh "zip -r './MindNode.app.zip' \"#{app_path}\""
+    zip(path: File.expand_path(app_path)) # zip the absolute path of .app to upload to hockey
 
-    hockey({
+    hockey(
       api_token: '...',
-      ipa: "./fastlane/MindNode.app.zip",
+      ipa: Actions.lane_context[Actions::SharedValues::ZIP_OUTPUT_PATH],
       notes: 'Release Notes',
-      status: "2", # 2: make available to download
+      status: "1", # 2: make available to download
       notify: "0", # 0: don't notify,
       dsym: File.join(output_path, "dSYMs/MindNode β.app.dSYM"),
       public_identifier: "..." # used to identify the app
-    })
+    )
   end
 
 end
@@ -176,19 +214,23 @@ end
 
 after_all do |lane|
   # This block is called, only if the executed lane was successful
-  slack(
-    message: nil,
-    success: true,
-    default_payloads: [:test_result, :git_branch]
-  )
+  if ENV["SLACK_URL"]
+    slack(
+      message: nil,
+      success: true,
+      default_payloads: [:test_result, :git_branch]
+    )
+  end
 
   clean_build_artifacts
 end
 
 
 error do |lane, exception|
-  slack(
-    message: exception.to_s,
-    success: false
-  )
+  if ENV["SLACK_URL"]
+    slack(
+      message: exception.to_s,
+      success: false
+    )
+  end
 end
