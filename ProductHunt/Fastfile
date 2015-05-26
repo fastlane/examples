@@ -1,10 +1,31 @@
-fastlane_version "1.0.0"
+fastlane_version "1.3.0"
 
 default_platform :ios
 
 platform :ios do
   before_all do
+    ENV["SLACK_URL"] ||= "..."
+
     cocoapods
+  end
+
+  # Responsible for building and signing the app
+  def build_app
+    # Download the provisioning profile for the app
+    sigh(output_path: "./fastlane/profiles") # Distribution Profile
+
+    # Download the provisioning profile
+    sigh(
+      output_path: "./fastlane/profiles",
+      app_identifier: "com.producthunt.producthuntbundleid.TodayExtension-FeaturedPosts"
+    )
+
+    increment_build_number # version bump
+
+    ipa(
+      workspace: "ProductHunt.xcworkspace",
+      scheme: "Release"
+    )
   end
 
   desc "Runs the tests of the iOS App"
@@ -25,15 +46,7 @@ platform :ios do
   desc "This action will also do a build version bump and push it to git."
   desc "This will **not** send an email to all testers, it will only be uploaded to the new TestFlight."
   lane :beta do
-    sigh(output_path: "./fastlane/profiles")
-
-    increment_build_number # version bump
-
-    ipa(
-      workspace: "ProductHunt.xcworkspace",
-      scheme: "Release"
-    )
-
+    build_app
 
     deliver(
       skip_deploy: true,
@@ -61,17 +74,30 @@ platform :ios do
   desc "- Build, sign and upload the app"
   desc "This will **not** submit the app for review."
   lane :appstore do
-    sigh(output_path: "./fastlane/profiles")
-
     snapshot
 
-    deliver :skip_deploy, :force
+    build_app
+
+    deliver(
+      skip_deploy: true, 
+      force: true
+    )
+
+    commit_version_bump(
+      message: 'Version Bump by fastlane',
+      force: true
+    )
+
+    build_number = Actions.lane_context[Actions::SharedValues::BUILD_NUMBER]
+    add_git_tag(tag: "appstore-#{build_number}")
+
+    push_to_git_remote
   end
 
   desc "Creates a new push certificate, ready to be uploaded to parse"
   lane :push do
     pem(generate_p12: true)
-    puts "----------- Please upload the .p12 file to parse.com -----------".yellow
+    puts "------------------ Please upload the .p12 file to parse.com ------------------ ".yellow
   end
 
 
@@ -83,7 +109,9 @@ platform :ios do
       default_payloads: [:lane, :test_result, :git_branch, :git_author]
     )
 
-    clean_build_artifacts
+    clean_build_artifacts(
+      exclude_pattern: ".*\.mobileprovision" # don't clear provisioning profiles, as we store them in git
+    )
   end
 
 
