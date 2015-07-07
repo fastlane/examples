@@ -1,10 +1,52 @@
 {
   "default": {
     "keyword": {
-      "font": "./fonts/MyFont-Rg.otf"
+      "fonts": [
+        {
+          "font": "./fonts/AlwynNewRd-Rg.otf",
+          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+        },
+        {
+          "font": "./fonts/Chinese.ttf",
+          "supported": ["zcmn-Hans"]
+        },
+        {
+          "font": "./fonts/Japanese.ttf",
+          "supported": ["ja-JP"]
+        },
+        {
+          "font": "./fonts/Korean.ttc",
+          "supported": ["ko-KR"]
+        },
+        {
+          "font": "./fonts/Russian.ttf",
+          "supported": ["ru-RU"]
+        }
+      ]
     },
     "title": {
-      "font": "./fonts/MyFont-Th.otf",
+      "fonts": [
+        {
+          "font": "./fonts/AlwynNewRd-Rg.otf",
+          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+        },
+        {
+          "font": "./fonts/Chinese.ttf",
+          "supported": ["zcmn-Hans"]
+        },
+        {
+          "font": "./fonts/Japanese.ttf",
+          "supported": ["ja-JP"]
+        },
+        {
+          "font": "./fonts/Korean.ttc",
+          "supported": ["ko-KR"]
+        },
+        {
+          "font": "./fonts/Russian.ttf",
+          "supported": ["ru-RU"]
+        }
+      ],
       "color": "#545454"
     },
     "background": "./background.jpg",
