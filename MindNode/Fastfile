@@ -5,6 +5,22 @@ def build_app
   project_file = 'iOS/MindNode for iOS.xcodeproj'
   
   increment_build_number(xcodeproj: project_file) # version bump
+  
+  # Get the latest provisionnig profiles from the Dev Portal and 
+  # More information about code signing: https://github.com/KrauseFx/fastlane/blob/master/docs/CodeSigning.md
+  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitextension", output_path: "/tmp")
+  ENV["WATCHKIT_EXTENSIONS_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+
+  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitapp", output_path: "/tmp")
+  ENV["WATCHKIT_APP_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+
+  sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
+  ENV["PROJECT_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+
+  ipa(
+    workspace: 'MindNode-iOS.xcworkspace',
+    scheme: 'MindNode for iOS (Release)'
+  )
 
   commit_version_bump(
     message: 'Version Bump by fastlane',
@@ -13,38 +29,6 @@ def build_app
   )
   
   push_to_git_remote
-  
-  # Get the latest provisionnig profiles from the Dev Portal and 
-  # update the project settings for each of the targets
-  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitextension", output_path: "/tmp")
-  update_project_provisioning(
-    xcodeproj: project_file,
-    build_configuration_filter: ".*WatchKit Extension.*"
-  )
-
-  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitapp", output_path: "/tmp")
-  update_project_provisioning(
-    xcodeproj: project_file,
-    build_configuration_filter: ".*WatchKit App.*"
-  )
-
-  sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
-  update_project_provisioning(
-    xcodeproj: project_file,
-    build_configuration_filter: "MindNodeTouch"
-  )
-
-  ipa(
-    workspace: 'MindNode-iOS.xcworkspace',
-    scheme: 'MindNode for iOS (Release)'
-  )
-
-  reset_git_repo(
-    force: true,
-    files: [
-      "iOS/MindNode for iOS.xcodeproj/project.pbxproj"
-    ]
-  )
 end
 
 def ios_tests
