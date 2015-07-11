@@ -8,14 +8,14 @@ def build_app
   
   # Get the latest provisionnig profiles from the Dev Portal and 
   # More information about code signing: https://github.com/KrauseFx/fastlane/blob/master/docs/CodeSigning.md
-  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitextension", output_path: "/tmp")
-  ENV["WATCHKIT_EXTENSIONS_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+  udid = sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitextension", output_path: "/tmp")
+  ENV["WATCHKIT_EXTENSIONS_UDID"] = udid
 
-  sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitapp", output_path: "/tmp")
-  ENV["WATCHKIT_APP_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+  udid = sigh(app_identifier: "com.mindnode.mindnodetouch.watchkitapp", output_path: "/tmp")
+  ENV["WATCHKIT_APP_UDID"] = udid
 
-  sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
-  ENV["PROJECT_UDID"] = Actions.lane_context[Actions::SharedValues::SIGH_UDID]
+  udid = sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
+  ENV["PROJECT_UDID"] = udid
 
   ipa(
     workspace: 'MindNode-iOS.xcworkspace',
