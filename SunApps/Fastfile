@@ -39,13 +39,13 @@ lane :deploy do
   cert
 
   produce(
-    produce_username: 'felix@sunapps.net',
-    produce_app_identifier: "net.sunapps.#{app_id}",
-    produce_app_name: app["fullName"],
-    produce_language: 'German',
-    produce_version: framework_version['version_number'],
-    produce_sku: app_id,
-    produce_team_name: 'SunApps GmbH' # only necessary when in multiple teams
+    username: 'felix@sunapps.net',
+    app_identifier: "net.sunapps.#{app_id}",
+    app_name: app["fullName"],
+    language: 'German',
+    version: framework_version['version_number'],
+    sku: app_id,
+    team_name: 'SunApps GmbH' # only necessary when in multiple teams
   )
 
   # provisioning profile
