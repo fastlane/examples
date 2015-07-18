@@ -130,5 +130,23 @@ A description on how the setup works is available in the [Overview](/SunApps).
 </p>
 ----
 
+
+### [fastlane](https://fastlane.tools)
+[![fastlane Logo](Logos/fastlane.png)](https://fastlane.tools)
+
+:rocket: **Creative Uses**
+
+- Deploying `fastlane` udpates using `fastlane` (so meta)
+- Lane Switching
+- Network Requests
+- Custom Commands
+- Get GitHub Release
+
+<p align="center">
+  <a href="https://github.com/KrauseFx/fastlane/tree/master/fastlane">Overview</a> &bull; 
+  <a href="https://github.com/KrauseFx/fastlane/blob/master/fastlane/Fastfile">Fastfile</a>
+</p>
+----
+
 If you like [fastlane](https://fastlane.tools) and would like to help this project by sharing your `Fastfile`, feel free to submit a pull request :+1:
 
