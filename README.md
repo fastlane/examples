@@ -136,7 +136,7 @@ A description on how the setup works is available in the [Overview](/SunApps).
 
 :rocket: **Creative Uses**
 
-- Deploying `fastlane` udpates using `fastlane` (so meta)
+- Deploying `fastlane` updates using `fastlane` (so meta)
 - Lane Switching
 - Network Requests
 - Custom Commands
