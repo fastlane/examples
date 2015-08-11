@@ -25,7 +25,6 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [Wikipedia](https://github.com/wikimedia/apps-ios-wikipedia/) by Wikimedia Foundation
-[![Wikmedia Logo](Logos/Wikimedia.png)](https://github.com/wikimedia/apps-ios-wikipedia)
 
 :green_book: **Advanced - Multiple Environments**
 
