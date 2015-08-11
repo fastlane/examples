@@ -1,16 +1,16 @@
-fastlane_version "1.3.0"
+fastlane_version "1.10.0"
 
 default_platform :ios
 
 platform :ios do
   before_all do
-    ENV["SLACK_URL"] ||= "..."
+    ENV["SLACK_URL"] ||= "https://hooks.slack.com/services/..."
 
     cocoapods
   end
 
-  # Responsible for building and signing the app
-  def build_app
+  desc "Responsible for building and signing the app"
+  private_lane :build_app do |options|
     # Download the provisioning profile for the app
     sigh(output_path: "./fastlane/profiles") # Distribution Profile
 
@@ -33,13 +33,9 @@ platform :ios do
     xctest(
       workspace: './ProductHunt.xcworkspace',
       scheme: 'Debug',
-      sdk: 'iphonesimulator'
+      sdk: 'iphonesimulator',
+      destination: "name=iPhone 5"
     )
-  end
-
-  desc "Create new screenshots for all the devices"
-  lane :screenshots do
-    snapshot
   end
 
   desc "Build and upload a new build to Apple TestFlight"
