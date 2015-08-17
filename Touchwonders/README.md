@@ -6,12 +6,20 @@ sudo gem install fastlane
 ```
 # Architecture
 
+## Remote Fastfile
+
 In Touchwodners we decided to implement a base collection of standard lanes and actions that we want to share among all our projects.
 To import them we take advantage of [import_from_git](https://github.com/KrauseFx/fastlane/blob/master/docs/Advanced.md#import_from_git) action.
 
 At very beginning of every project's Fastfile:
 
 `import_from_git(url:"{touchwonders_git_repo}:/library/fastlane.git", path:"Fastfile")`
+
+## Configuration file
+
+Every project's fastlane folder contains a required configuration file responsible to load proper environment and settings per project deployment.
+
+Example: [fastlane_config.yaml](fastlane_config.yaml)
 
 # Available actions
 
