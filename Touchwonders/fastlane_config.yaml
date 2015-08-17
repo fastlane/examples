@@ -1,0 +1,31 @@
+slack_url: http://SLACL_URL.SLACK_IT # Slack URL to current project's channel
+xcode_select: '/Applications/Xcode-beta.app' # Choose the xcode version to use
+sdk: iphoneos9.0 # SDK to use when building
+scheme: Awesome app # Project scheme name
+
+development:
+  remote_branch: develop # Project's reference branch to checkout
+  configuration: Development # Project's configuration to use when "build"
+  notifications: NO # Enable/disable notifications
+  team_id: APPLE_TEAM_ID # Team id to use
+  targets: # A collection of all project's targets. This is useful when fetching provisioning profiles for each of them
+   - target_identifier: PROJECT # Convenience identifier. This is choose by you and reuse it in your Fastfile.
+     app_identifier: com.touchwonders.awesomeapp.development # Bundle identifier for current target
+   - targetidentifier: WATCHKIT_EXTENSION
+     app_identifier: com.touchwonders.awesomeapp.development.watchkitextension
+   - targetidentifier: WATCH_APP
+     app_identifier: com.touchwonders.awesomeapp.development.watchapp
+
+stable:
+  remote_branch: master
+  configuration: Stable
+  notifications: YES
+  groups: touchwonders
+  team_id: APPLE_TEAM_ID
+  targets:
+   - target_identifier: PROJECT
+     app_identifier: com.touchwonders.awesomeapp.stable
+   - targetidentifier: WATCHKIT_EXTENSION
+     app_identifier: com.touchwonders.awesomeapp.stable.watchkitextension
+   - targetidentifier: WATCH_APP
+     app_identifier: com.touchwonders.awesomeapp.stable.watchapp
