@@ -165,6 +165,7 @@ platform :ios do
     settings = OpenStruct.new(config)
     lane_setting = settings[options[:lane_name]]
 
+    # EXPERIMENTAL START
     # Add app icon overlay if needed
     if lane_setting['add_icon_overlay']
       case options['lane_name']
@@ -182,6 +183,7 @@ platform :ios do
         # No overlay has been requested.
       end
     end
+    # EXPERIMENTAL END
 
     # Increment build number if needed
     case options['lane_name']
