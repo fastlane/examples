@@ -124,7 +124,7 @@ platform :ios do
 
   private_lane :build_and_archive do |options|
     # Get configurations
-    config = YAML.load(open(File.join(File.dirname(__FILE__),"fastlane_config.yaml")))
+    config = YAML.load(open(File.join(File.dirname(__FILE__), "fastlane_config.yaml")))
     settings = OpenStruct.new(config)
     lane_setting = settings[options[:lane_name]]
 
@@ -144,7 +144,7 @@ platform :ios do
 
   private_lane :publish do |options|
     load_release_notes(
-        ui_prompt: false
+      ui_prompt: false
     )
 
     crashlytics(
@@ -161,7 +161,7 @@ platform :ios do
 
   private_lane :project_warm_up do |options|
     # Get configurations
-    config = YAML.load(open(File.join(File.dirname(__FILE__),"fastlane_config.yaml")))
+    config = YAML.load(open(File.join(File.dirname(__FILE__), "fastlane_config.yaml")))
     settings = OpenStruct.new(config)
     lane_setting = settings[options[:lane_name]]
 
