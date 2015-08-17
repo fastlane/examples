@@ -35,6 +35,10 @@ Every project root folder contains:
 
 At every interaction the build note file content is added to `RELEASE_NOTES.md` collection and finally used for fill in Crashlytics build's release notes. 
 
+### GIT Checkout
+
+Checkout a branch from project working copy.
+
 # Availabe lanes
 
 The predefined lanes are divided in _public_ and _private_.
