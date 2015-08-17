@@ -1,26 +1,8 @@
+# AUTHOR: Fabio Milano < @iamfabiomilano >
+
 require 'yaml'
 require 'ostruct'
 
-# AUTHOR: Fabio Milano < @iamfabiomilano >
-
-# Customise this file, documentation can be found here:
-# https://github.com/KrauseFx/fastlane/tree/master/docs
-# All available actions: https://github.com/KrauseFx/fastlane/blob/master/docs/Actions.md
-# can also be listed using the `fastlane actions` command
-
-# Change the syntax highlighting to Ruby
-# All lines starting with a # are ignored when running `fastlane`
-
-# By default, fastlane will send which actions are used
-# No personal data is shared, more information on https://github.com/fastlane/enhancer
-# Uncomment the following line to opt out
-# opt_out_usage
-
-# If you want to automatically update fastlane if a new version is available:
-# update_fastlane
-
-# This is the minimum version number required.
-# Update this, if you use features of a newer version
 fastlane_version "1.14.0"
 
 default_platform :ios
@@ -55,11 +37,11 @@ platform :ios do
   desc "Deploy a new stable version"
   desc "Sprint end weekly build"
   lane :stable do |options|
-    # Kick off private lane
+    # Kick off
     config_env(options)
     prepare(remote_branch: options[:remote_branch])
 
-    # Download all requred provisioning profiles
+    # Download all required provisioning profiles
     get_provisioning_profile(options.merge(lane_name: 'stable'))
 
     # Last step before 'build&archive'
@@ -75,11 +57,11 @@ platform :ios do
   desc "Deploy a new version to the App Store"
   desc "App Store build!"
   lane :release do |options|
-    # Kick off private lane
+    # Kick off
     config_env(options)
     prepare(remote_branch: options[:remote_branch])
 
-    # Download all requred provisioning profiles
+    # Download all required provisioning profiles
     get_provisioning_profile(options.merge(lane_name: 'release'))
 
     # Last step before 'build&archive'
