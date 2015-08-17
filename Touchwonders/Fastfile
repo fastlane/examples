@@ -1,0 +1,227 @@
+# AUTHOR: Fabio Milano < @iamfabiomilano >
+
+require 'yaml'
+require 'ostruct'
+
+fastlane_version "1.14.0"
+
+default_platform :ios
+
+
+platform :ios do
+
+  before_all do
+    
+  end
+
+  desc "Submit a new daily build to Crashlytics"
+  desc "A daily build is sent to Touchwonders team by default"
+  lane :development do |options|
+    # Kick off private lane
+    config_env(options)
+    prepare(remote_branch: options[:remote_branch])
+
+    # Download all requred provisioning profiles
+    get_provisioning_profile(options.merge(lane_name: 'development'))
+
+    # Last step before 'build&archive'
+    project_warm_up(options.merge(lane_name: 'development'))
+
+    # Send the project to take a "build and archive" treatment
+    build_and_archive(options.merge(lane_name: 'development'))
+
+    # Publish the result
+    publish(options)
+  end
+
+  desc "Deploy a new stable version"
+  desc "Sprint end weekly build"
+  lane :stable do |options|
+    # Kick off
+    config_env(options)
+    prepare(remote_branch: options[:remote_branch])
+
+    # Download all required provisioning profiles
+    get_provisioning_profile(options.merge(lane_name: 'stable'))
+
+    # Last step before 'build&archive'
+    project_warm_up(options.merge(lane_name: 'stable'))
+
+    # Send the project to take a "build and archive" treatment
+    build_and_archive(options.merge(lane_name: 'stable'))
+
+    # Publish the result
+    publish(options)
+  end
+
+  desc "Deploy a new version to the App Store"
+  desc "App Store build!"
+  lane :release do |options|
+    # Kick off
+    config_env(options)
+    prepare(remote_branch: options[:remote_branch])
+
+    # Download all required provisioning profiles
+    get_provisioning_profile(options.merge(lane_name: 'release'))
+
+    # Last step before 'build&archive'
+    project_warm_up(options.merge(lane_name: 'release'))
+
+    # Send the project to take a "build and archive" treatment
+    build_and_archive(options.merge(lane_name: 'release'))
+
+    # Upload to iTunes Connect
+    deliver(
+      skip_deploy: true,
+      force: true
+    )
+  end
+
+  # PRIVATE LANES
+
+  private_lane :config_env do |options|
+    # Select proper xcode tool
+    xcode = options[:xcode_select]
+
+  end
+
+  private_lane :prepare do |options|
+    ensure_git_status_clean
+
+    current_branch = git_branch
+
+    # # Checkout remote branch if needed
+    if !options[:remote_branch].nil? && options[:remote_branch] != current_branch
+      puts "Checkout new branch #{options[:remote_branch]}"
+      git_checkout(remote_branch: options[:remote_branch])  
+    else
+      git_pull
+    end
+
+    cocoapods
+  end
+
+  private_lane :get_provisioning_profile do |options|
+    # Get targets
+    config = YAML.load(open(File.join(File.dirname(__FILE__),"fastlane_config.yaml")))
+    settings = OpenStruct.new(config)
+    lane_setting = settings[options[:lane_name]]
+    targets = lane_setting['targets']
+
+    username = "{developer_account_of_our_ci_server [at] touchwonders [dot] com}"
+    username = lane_setting['developer_portal_account_id'] if lane_setting['developer_portal_account_id']
+
+    targets.each do |target_setting|
+      # Get the latest provisionnig profiles from the Dev Portal
+      udid = sigh(username: username,
+        team_id: options[:team_id],
+        app_identifier: target_setting['app_identifier'],
+        output_path: "/tmp")
+      ENV["#{target_setting['target_identifier']}_UDID"] = udid
+      ENV["#{target_setting['target_identifier']}_PROVISIONING_PATH"] = Actions.lane_context[SharedValues::SIGH_PROFILE_PATH]
+    end
+  end
+
+  private_lane :build_and_archive do |options|
+    # Get configurations
+    config = YAML.load(open(File.join(File.dirname(__FILE__), "fastlane_config.yaml")))
+    settings = OpenStruct.new(config)
+    lane_setting = settings[options[:lane_name]]
+
+    # Make sure current directory is clean
+    File.delete("../#{settings['scheme']}.ipa") if File.exist? "../#{settings['scheme']}.ipa"
+
+    gym(
+      scheme: settings['scheme'],
+      provisioning_profile_path: ENV["PROJECT_PROVISIONING_PATH"],
+      configuration: lane_setting['configuration'],
+      output_name: "#{settings['scheme']}",
+      workspace: "#{settings['scheme']}.xcworkspace",
+      sdk: "#{options[:sdk]}"
+    )
+
+  end
+
+  private_lane :publish do |options|
+    load_release_notes(
+      ui_prompt: false
+    )
+
+    crashlytics(
+      crashlytics_path: './Pods/Crashlytics/Crashlytics.framework',
+      api_token: 'API_TOKEN',
+      build_secret: 'BUILD_SECRET',
+      ipa_path: "#{Actions.lane_context[SharedValues::IPA_OUTPUT_PATH]}",
+      groups: options[:groups],
+      notifications: options[:notifications],
+      notes_path: Actions.lane_context[SharedValues::LOAD_BUILD_NOTES_FILE_PATH]
+    )
+    
+  end
+
+  private_lane :project_warm_up do |options|
+    # Get configurations
+    config = YAML.load(open(File.join(File.dirname(__FILE__), "fastlane_config.yaml")))
+    settings = OpenStruct.new(config)
+    lane_setting = settings[options[:lane_name]]
+
+    # EXPERIMENTAL START
+    # Add app icon overlay if needed
+    if lane_setting['add_icon_overlay']
+      case options['lane_name']
+      when 'development' 
+        add_icon_overlay(
+          overlay_image_path: 'actions/assets/nightly_ribbon.png',
+          appiconset_path: lane_setting['appiconset_path']
+        )
+      when 'stable'
+        add_icon_overlay(
+          overlay_image_path: 'actions/assets/dev_ribbon.png',
+          appiconset_path: lane_setting['appiconset_path']
+        )
+      else
+        # No overlay has been requested.
+      end
+    end
+    # EXPERIMENTAL END
+
+    # Increment build number if needed
+    case options['lane_name']
+    when 'release'
+      # No increment build number required.
+    else
+      increment_build_number
+    end
+  end
+
+
+  # AFTER CALLBACKS
+
+  after_all do |lane|
+    slack(
+      message: "Successfully deployed new #{lane} build (#{Actions.lane_context[SharedValues::BUILD_NUMBER]}).",
+      payload: {
+        'What\'s new' => Actions.lane_context[SharedValues::LOAD_BUILD_NOTES_TEXT]
+      }
+    )
+
+    # Make sure our directory is clean, except for changes Fastlane has made
+    clean_build_artifacts
+
+    # Commit new build and push to git
+    git_commit
+    push_to_git_remote
+  end
+
+
+  error do |lane, exception|
+    reset_git_repo(
+      force: true
+    )
+    
+    slack(
+      message: exception.message,
+      success: false
+    )
+  end
+end
