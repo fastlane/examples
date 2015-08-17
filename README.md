@@ -129,8 +129,8 @@ A description on how the setup works is available in the [Overview](/SunApps).
 </p>
 ----
 
-### [Touchwonders](https://touchwonders.com)
-[![Touchwondersa](Logos/Touchwonders.png)](https://https://touchwonders.com)
+### [Touchwonders](http://touchwonders.com)
+[![Touchwondersa](Logos/Touchwonders.png)](http://touchwonders.com)
 
 :bike: **Shared Fastfile for multiple projects**
 
