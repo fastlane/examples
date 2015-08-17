@@ -146,7 +146,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 <p align="center">
   <a href="/Touchwonders/">Overview</a> &bull; 
   <a href="/Touchwonders/Fastfile">Fastfile</a> &bull; 
-  <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a> &bull; 
+  <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
 ----
 
