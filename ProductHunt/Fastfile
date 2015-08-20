@@ -22,7 +22,7 @@ platform :ios do
 
     increment_build_number # version bump
 
-    ipa(
+    gym(
       workspace: "ProductHunt.xcworkspace",
       scheme: "Release"
     )
