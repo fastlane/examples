@@ -17,7 +17,7 @@ def build_app
   udid = sigh(app_identifier: "com.mindnode.mindnodetouch", output_path: "/tmp")
   ENV["PROJECT_UDID"] = udid
 
-  ipa(
+  gym(
     workspace: 'MindNode-iOS.xcworkspace',
     scheme: 'MindNode for iOS (Release)'
   )
@@ -155,40 +155,6 @@ platform :mac do
       deliver_file_path: File.join(Dir.pwd, 'Mac') # Mac specific app metadata)
     )
   end
-  
-  desc "[WIP] Build, sign and upload a new Mac build to Hockey App"
-  lane :beta do
-    xcclean(
-      workspace:  "MindNode-Mac.xcworkspace",
-      scheme: "MindNode for Mac (β)",
-      destination: "platform=OS X"
-    )
-
-    output_path = "./build.xcarchive"
-    xcbuild(
-      workspace:  "MindNode-Mac.xcworkspace",
-      scheme: "MindNode for Mac (β)",
-      destination: "platform=OS X",
-      archive: true,
-      archive_path: output_path
-    )
-    
-    # Zip the generated app to upload it to hockey
-    # `..` to get up out of the fastlane subfolder
-    app_path = File.join("..", output_path, "Products/Applications/MindNode β.app")
-    zip(path: File.expand_path(app_path)) # zip the absolute path of .app to upload to hockey
-
-    hockey(
-      api_token: '...',
-      ipa: Actions.lane_context[Actions::SharedValues::ZIP_OUTPUT_PATH],
-      notes: 'Release Notes',
-      status: "1", # 2: make available to download
-      notify: "0", # 0: don't notify,
-      dsym: File.join(output_path, "dSYMs/MindNode β.app.dSYM"),
-      public_identifier: "..." # used to identify the app
-    )
-  end
-
 end
 
 
