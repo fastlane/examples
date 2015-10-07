@@ -42,6 +42,10 @@ module Fastlane
         'duemunk'
       end
       
+      def self.is_supported?
+        true
+      end
+      
       def self.projectKey(aKey)
         projectKey = ''
         filename = "./BeMyEyes/Source/BMEGlobal.h"
