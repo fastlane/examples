@@ -8,7 +8,7 @@ fastlane Example Setups
 This repository contains a few `fastlane` example setups that help you getting started.
 
 ### [Fitbay](https://fitbay.com)
-[![fastlane Logo](Logos/Fitbay.png)](https://fastlane.tools)
+[![fastlane Logo](Logos/Fitbay.png)](https://fitbay.com)
 
 :womans_clothes: **Full stack deployment**
 
