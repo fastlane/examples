@@ -150,6 +150,22 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 </p>
 ----
 
+### [Fitbay](https://fitbay.com)
+[![fastlane Logo](Logos/Fitbay.png)](https://fastlane.tools)
+
+:womans_clothes: **Full stack deployment**
+
+- Crashlytics, TestFlight, and App Store distribution
+- Managing of Provisioning Profiles
+- Slack Team notifications
+- Version number bump and Git commit
+- Custom scripts
+
+<p align="center"> 
+  <a href="/Fitbay/">Overview</a> &bull; 
+  <a href="/Fitbay/Fastfile">Fastfile</a>
+</p>
+----
 
 
 ### [fastlane](https://fastlane.tools)
