@@ -55,10 +55,6 @@ platform :ios do
   ######################### PRIVATE LANES #########################
   #------------------------- Crashlytics -------------------------#
 
-  desc "Builds and uploads to Crashlytics"
-  desc "**Required** parameters include"
-  desc "- `scheme` - The scheme to use for the build. Valid values include: `Testing` and `Staging`"
-  desc ""
   private_lane :fabric do |options|
     scheme = options[:scheme]
 
@@ -86,7 +82,6 @@ platform :ios do
 
   #--------------------------- App Store -------------------------#
 
-  desc "Deploy a new version to the App Store"
   private_lane :itc do |options|
     scheme = options[:scheme]
 
