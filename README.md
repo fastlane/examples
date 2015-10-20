@@ -13,6 +13,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 :womans_clothes: **Full stack deployment**
 
 - Crashlytics, TestFlight, and App Store distribution
+- Automatic build environment selection
 - Managing of Provisioning Profiles
 - Slack Team notifications
 - Version number bump and Git commit
