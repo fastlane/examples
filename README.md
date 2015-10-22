@@ -7,6 +7,25 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
+### [Fitbay](https://fitbay.com)
+[![fastlane Logo](Logos/Fitbay.png)](https://fitbay.com)
+
+:womans_clothes: **Full stack deployment**
+
+- Crashlytics, TestFlight, and App Store distribution
+- Automatic build environment selection
+- Managing of Provisioning Profiles
+- Slack Team notifications
+- Version number bump and Git commit
+- Custom scripts
+- Lane switching with private lanes
+
+<p align="center"> 
+  <a href="/Fitbay/">Overview</a> &bull; 
+  <a href="/Fitbay/Fastfile">Fastfile</a>
+</p>
+----
+
 ### [Artsy eidolon](https://github.com/artsy/eidolon)
 [![Artsy](Logos/Artsy.png)](https://github.com/artsy/eidolon)
 
@@ -149,7 +168,6 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
 ----
-
 
 
 ### [fastlane](https://fastlane.tools)
