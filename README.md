@@ -64,6 +64,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 ----
 
 ### [Firefox](https://github.com/mozilla/firefox-ios) by Mozilla
+[![Firefox](Logos/Firefox.png)](https://github.com/mozilla/firefox-ios/)
 
 :cat2: **Advanced - submodules and custom actions**
 
