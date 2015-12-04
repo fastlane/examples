@@ -115,7 +115,7 @@ end
 
 
 after_all do |lane|
-  notification(subtitle: "Fastlane finished '#{lane}'") # Mac OS X Notification
+  notification(subtitle:"fastlane finished '#{lane}'") # Mac OS X Notification
 end
 
 

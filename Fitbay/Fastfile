@@ -1,0 +1,145 @@
+
+default_platform :ios
+
+platform :ios do
+
+  ############################## PRE ##############################
+
+  before_all do
+    ensure_git_status_clean
+    
+    sh "./scripts/remove_pods.sh"
+    cocoapods
+    
+    increment_build_number
+  end
+
+  ######################### PUBLIC LANES ##########################
+
+  lane :testing do
+    fabric(scheme: "Testing")
+  end
+  
+  lane :staging do
+    fabric(scheme: "Staging")
+  end
+
+  lane :preproduction do
+    itc(scheme: "Preproduction")
+  end
+
+  lane :release do
+    itc(scheme: "Release")
+  end
+
+  ######################### PRIVATE LANES #########################
+  #------------------------- Crashlytics -------------------------#
+
+  private_lane :fabric do |options|
+    scheme = options[:scheme]
+
+    sigh(
+      skip_install: true,
+      development: true
+    )
+
+    build(
+      scheme: scheme, 
+      signId: ENV['SIGNING_IDENTITY_DEV']
+    )
+
+    environment = scheme.upcase
+    api = File.read("../Fitbay/Constants/environment_constants.h").scan(/\d\.*/).join
+
+    crashlytics(
+      ipa_path: "../Fitbay.ipa",
+      notes: "Running on #{environment} #{api}",
+      groups: ['fitbay-test']
+    )
+
+    post_to_slack(scheme: scheme, destination: "Crashlytics")
+  end
+
+  #--------------------------- App Store -------------------------#
+
+  private_lane :itc do |options|
+    scheme = options[:scheme]
+
+    sigh(
+      skip_install: true,
+      development: false,
+    )
+
+    build(
+      scheme: scheme, 
+      signId: ENV['SIGNING_IDENTITY_PROD']
+    )
+
+    pilot(
+      ipa: "../Fitbay.ipa",
+      skip_submission: true,
+    )
+    
+    post_to_slack(scheme: scheme, destination: "TestFlight")
+    
+  end
+
+  ############################# UTIL ##############################
+
+  private_lane :build do |options|
+    scheme = options[:scheme]
+    signingId = options[:signId]
+
+    gym(
+      scheme: "Fitbay #{scheme}", 
+      configuration: scheme, 
+      clean: true, 
+      include_bitcode: false,
+      workspace: "Fitbay.xcworkspace",
+      output_directory: "../",
+      output_name: "Fitbay.ipa",
+      codesigning_identity: "#{signingId}",
+      xcargs: "ARCHIVE=YES" # Used to tell the Fabric run script to upload dSYM file
+    )
+  end
+
+  private_lane :post_to_slack do |options|
+    scheme      = options[:scheme]
+    version     = get_version_number(xcodeproj: "Fitbay.xcodeproj")
+    build       = get_build_number(xcodeproj: "Fitbay.xcodeproj")
+    environment = scheme.upcase
+    api         = File.read("../Fitbay/Constants/environment_constants.h").scan(/\d\.*/).join
+    destination = options[:destination]
+
+    slack(
+      message: "<!here|here>: New :ios: *#{version}* (#{build}) running `#{environment}` `#{api}` has been submitted to *#{destination}*  :rocket:",
+    )
+
+  end
+
+  ############################# POST ##############################
+
+  # This lane is called, only if the executed lane was successful
+  after_all do |lane|
+
+    File.delete("../../Fitbay.ipa")
+    File.delete("../../Fitbay.app.dSYM.zip")
+
+    sh "./scripts/add_pods.sh"
+    cocoapods
+
+    build = Actions.lane_context[Actions::SharedValues::BUILD_NUMBER]
+    commit_version_bump(
+      message: "Build #{build}"
+    )
+
+    notify "Fastlane finished '#{lane}' successfully" # Mac OS X Notification
+  end
+
+  error do |lane, exception|
+    sh "./scripts/add_pods.sh"
+    cocoapods
+
+    notify "Fastlane '#{lane}' errored" # Mac OS X Notification
+  end
+end
