@@ -76,6 +76,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane">Overview</a> &bull; 
   <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/BaseFastfile">Fastfile</a> &bull; 
   <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/Snapfile">Snapfile</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios/blob/master/ClientUITests/snapshot/MarketingSnapshotTests.swift">SnapshotTests.swift</a> &bull; 
   <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane/actions">Custom Actions</a>
 </p>
 ----
