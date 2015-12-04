@@ -63,6 +63,23 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
+### [Firefox](https://github.com/mozilla/firefox-ios) by Mozilla
+
+:cat2: **Advanced - submodules and custom actions**
+
+- Different Bundle Identifiers per `lane`
+- Custom enterprise deployment
+- `snapshot` setup with UI Tests
+- Advanced shell scripting
+
+<p align="center">
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane">Overview</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/BaseFastfile">Fastfile</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/Snapfile">Snapfile</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane/actions">Custom Actions</a>
+</p>
+----
+
 ### [MindNode](https://mindnode.com/)
 [![MindNode](Logos/MindNode.png)](https://mindnode.com/)
 
