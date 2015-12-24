@@ -27,7 +27,7 @@ end
 def build_app
   sh "rake prepare_release" # an internal rake task that prepares the app for the release
 
-  ipa(
+  gym(
     workspace: "./Project.xcworkspace",
     scheme: "Release"
   )

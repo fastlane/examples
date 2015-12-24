@@ -7,6 +7,25 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
+### [Fitbay](https://fitbay.com)
+[![fastlane Logo](Logos/Fitbay.png)](https://fitbay.com)
+
+:womans_clothes: **Full stack deployment**
+
+- Crashlytics, TestFlight, and App Store distribution
+- Automatic build environment selection
+- Managing of Provisioning Profiles
+- Slack Team notifications
+- Version number bump and Git commit
+- Custom scripts
+- Lane switching with private lanes
+
+<p align="center"> 
+  <a href="/Fitbay/">Overview</a> &bull; 
+  <a href="/Fitbay/Fastfile">Fastfile</a>
+</p>
+----
+
 ### [Artsy eidolon](https://github.com/artsy/eidolon)
 [![Artsy](Logos/Artsy.png)](https://github.com/artsy/eidolon)
 
@@ -41,6 +60,25 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Wikipedia/Deliverfile">Deliverfile</a> &bull; 
   <a href="/Wikipedia/Appfile">Appfile</a> &bull; 
   <a href="/Wikipedia/metadata/">Metadata</a>
+</p>
+----
+
+### [Firefox](https://github.com/mozilla/firefox-ios) by Mozilla
+[![Firefox](Logos/Firefox.png)](https://github.com/mozilla/firefox-ios/)
+
+:cat2: **Advanced - submodules and custom actions**
+
+- Different Bundle Identifiers per `lane`
+- Custom enterprise deployment
+- `snapshot` setup with UI Tests
+- Advanced shell scripting
+
+<p align="center">
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane">Overview</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/BaseFastfile">Fastfile</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/Snapfile">Snapfile</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios/blob/master/ClientUITests/snapshot/MarketingSnapshotTests.swift">SnapshotTests.swift</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane/actions">Custom Actions</a>
 </p>
 ----
 
@@ -126,6 +164,27 @@ A description on how the setup works is available in the [Overview](/SunApps).
   <a href="/SunApps/Snapfile">Snapfile</a> &bull; 
   <a href="/SunApps/Appfile">Appfile</a> &bull;
   <a href="/SunApps/snapshot.js">snapshot.js</a>
+</p>
+----
+
+### [Touchwonders](http://touchwonders.com)
+[![Touchwondersa](Logos/Touchwonders.png)](http://touchwonders.com)
+
+:bike: **Shared Fastfile for multiple projects**
+
+- Maintain and Deploy multiple of Apps and Projects.
+- Import external `Fastfile` from external repo.
+- Load fastlane configuration YAML file.
+- Create/Renew/Download profiles for multiple targets.
+- Custom `load_release_notes` action.
+
+A description on how the setup works is available in the [Overview](/Touchwonders).
+
+
+<p align="center">
+  <a href="/Touchwonders/">Overview</a> &bull; 
+  <a href="/Touchwonders/Fastfile">Fastfile</a> &bull; 
+  <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
 ----
 

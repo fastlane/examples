@@ -57,7 +57,7 @@ lane :translate do
 end
 
 lane :beta_dev do
-  ipa(
+  gym(
     scheme: "BeMyEyes Development",
     configuration: "ReleaseDev",
   )
@@ -71,7 +71,7 @@ lane :beta_dev do
 end
 
 lane :beta_staging do
-  ipa(
+  gym(
     scheme: "BeMyEyes Staging",
     configuration: "ReleaseStaging",
   )
@@ -86,7 +86,7 @@ lane :beta_staging do
 end
 
 lane :beta_production do
-  ipa(
+  gym(
     scheme: "BeMyEyes",
     configuration: "Release",
   )
@@ -100,7 +100,7 @@ lane :beta_production do
 end
 
 lane :production do
-  ipa(
+  gym(
     scheme: "BeMyEyes",
     configuration: "Release",
   )
@@ -115,7 +115,7 @@ end
 
 
 after_all do |lane|
-  notify "Fastlane finished '#{lane}'" # Mac OS X Notification
+  notification(subtitle:"fastlane finished '#{lane}'") # Mac OS X Notification
 end
 
 
