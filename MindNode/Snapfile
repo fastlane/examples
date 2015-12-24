@@ -54,6 +54,7 @@ setup_for_device_change do |lang, device|
 
   Dir.glob(File.join(example_files, '*.mindnode')).each do |example_path|
     puts "Copying '#{example_path}' to .app container"
-    FileUtils.cp_r(example_path, File.join(app_path, folder_name)) rescue nil # in case the file already exists
+    to = File.join(app_path, folder_name)
+    FileUtils.cp_r(example_path, to) unless File.exist?(to)
   end
 end
