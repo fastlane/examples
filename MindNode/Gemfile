@@ -1,3 +1,2 @@
-gem 'nokogiri'
 gem 'fastlane'
 gem 'cocoapods'
