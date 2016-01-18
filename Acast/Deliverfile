@@ -1,0 +1,3 @@
+username "jagcesar@example.com" # the iTunes Connect login email address
+
+copyright "#{Time.now.year} Acast AB"
