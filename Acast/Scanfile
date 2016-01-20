@@ -1,0 +1,6 @@
+scheme "Acast"
+clean true
+code_coverage true
+device "iPhone 6 (9.1)"
+skip_slack true
+slack_only_on_failure true
