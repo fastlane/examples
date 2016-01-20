@@ -1,10 +1,10 @@
-fastlane_version "1.39.0"
+fastlane_version "1.50.0"
 
 default_platform :ios
 
 platform :ios do
   before_all do
-    ENV["SLACK_URL"] = "https://hooks.slack.com/services/[webhook-url]" #Webhook URL created in Slack
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/[webhook-url]" # Webhook URL created in Slack
   end
 
   desc "Installs FixCode which disables the \"Fix Issue\" button in Xcode"
@@ -69,6 +69,3 @@ platform :ios do
     end
   end
 end
-
-# More information about multiple platforms in fastlane: https://github.com/KrauseFx/fastlane/blob/master/docs/Platforms.md
-# All available actions: https://github.com/KrauseFx/fastlane/blob/master/docs/Actions.md
