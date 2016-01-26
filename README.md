@@ -7,6 +7,33 @@ fastlane Example Setups
 
 This repository contains a few `fastlane` example setups that help you getting started.
 
+### [Acast](https://www.acast.com)
+
+[![Acast logotype](Logos/acast.png)](https://www.acast.com)
+
+🎶 **Simple setup, saving tons of time**
+
+- Slack notifications on failed builds or unsuccessful tests
+  - Slack notifications are only fired if they're run on our CI
+- Managed provisioning profiles using [match](https://github.com/fastlane/match)
+- Creation of screenshots using [snapshot](https://github.com/fastlane/snapshot)
+  - Text and device frames are added to screenshots using [frameit](https://github.com/fastlane/frameit)
+  - Delivered to iTunes Connect using [deliver](https://github.com/fastlane/deliver)
+- Submission to App Store using [gym](https://github.com/fastlane/gym) and [deliver](https://github.com/fastlane/deliver)
+
+<p align="center">
+  <a href="/Acast/">Overview</a> &bull;
+  <a href="/Acast/Fastfile">Fastfile</a> &bull;
+  <a href="/Acast/Appfile">Appfile</a> &bull;
+  <a href="/Acast/Deliverfile">Deliverfile</a> &bull;
+  <a href="/Acast/Gymfile">Gymfile</a> &bull;
+  <a href="/Acast/Matchfile">Matchfile</a> &bull;
+  <a href="/Acast/Scanfile">Scanfile</a> &bull;
+  <a href="/Acast/Snapfile">Snapfile</a> &bull;
+  <a href="/Acast/screenshots/Framefile.json">Framefile</a>
+</p>
+----
+
 ### [Fitbay](https://fitbay.com)
 [![fastlane Logo](Logos/Fitbay.png)](https://fitbay.com)
 
@@ -20,8 +47,8 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Custom scripts
 - Lane switching with private lanes
 
-<p align="center"> 
-  <a href="/Fitbay/">Overview</a> &bull; 
+<p align="center">
+  <a href="/Fitbay/">Overview</a> &bull;
   <a href="/Fitbay/Fastfile">Fastfile</a>
 </p>
 ----
@@ -38,7 +65,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 
 <p align="center">
-  <a href="/Artsy/eidolon">Overview</a> &bull; 
+  <a href="/Artsy/eidolon">Overview</a> &bull;
   <a href="/Artsy/eidolon/Fastfile">Fastfile</a>
 </p>
 ----
@@ -55,10 +82,10 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 
 <p align="center">
-  <a href="/Wikipedia/">Overview</a> &bull; 
-  <a href="/Wikipedia/Fastfile">Fastfile</a> &bull; 
-  <a href="/Wikipedia/Deliverfile">Deliverfile</a> &bull; 
-  <a href="/Wikipedia/Appfile">Appfile</a> &bull; 
+  <a href="/Wikipedia/">Overview</a> &bull;
+  <a href="/Wikipedia/Fastfile">Fastfile</a> &bull;
+  <a href="/Wikipedia/Deliverfile">Deliverfile</a> &bull;
+  <a href="/Wikipedia/Appfile">Appfile</a> &bull;
   <a href="/Wikipedia/metadata/">Metadata</a>
 </p>
 ----
@@ -74,10 +101,10 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Advanced shell scripting
 
 <p align="center">
-  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane">Overview</a> &bull; 
-  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/BaseFastfile">Fastfile</a> &bull; 
-  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/Snapfile">Snapfile</a> &bull; 
-  <a href="https://github.com/mozilla/firefox-ios/blob/master/ClientUITests/snapshot/MarketingSnapshotTests.swift">SnapshotTests.swift</a> &bull; 
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane">Overview</a> &bull;
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/BaseFastfile">Fastfile</a> &bull;
+  <a href="https://github.com/mozilla/firefox-ios-build-tools/blob/master/fastlane/Snapfile">Snapfile</a> &bull;
+  <a href="https://github.com/mozilla/firefox-ios/blob/master/ClientUITests/snapshot/MarketingSnapshotTests.swift">SnapshotTests.swift</a> &bull;
   <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane/actions">Custom Actions</a>
 </p>
 ----
@@ -96,12 +123,12 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 
 <p align="center">
-  <a href="/MindNode/">Overview</a> &bull; 
-  <a href="/MindNode/Fastfile">Fastfile</a> &bull; 
-  <a href="/MindNode/Snapfile">Snapfile</a> &bull; 
-  <a href="/MindNode/MindNode.js">MindNode.js</a> &bull; 
-  <a href="/MindNode/screenshots">screenshots</a> &bull; 
-  <a href="/MindNode/screenshots/Framefile.json">Framefile.json</a> &bull; 
+  <a href="/MindNode/">Overview</a> &bull;
+  <a href="/MindNode/Fastfile">Fastfile</a> &bull;
+  <a href="/MindNode/Snapfile">Snapfile</a> &bull;
+  <a href="/MindNode/MindNode.js">MindNode.js</a> &bull;
+  <a href="/MindNode/screenshots">screenshots</a> &bull;
+  <a href="/MindNode/screenshots/Framefile.json">Framefile.json</a> &bull;
   <a href="/MindNode/mac">MacScreenshots</a>
 </p>
 ----
@@ -117,9 +144,9 @@ This repository contains a few `fastlane` example setups that help you getting s
 - Version Bump & Git Actions
 
 <p align="center">
-  <a href="/ProductHunt/">Overview</a> &bull; 
-  <a href="/ProductHunt/Fastfile">Fastfile</a> &bull; 
-  <a href="/ProductHunt/Deliverfile">Deliverfile</a> &bull; 
+  <a href="/ProductHunt/">Overview</a> &bull;
+  <a href="/ProductHunt/Fastfile">Fastfile</a> &bull;
+  <a href="/ProductHunt/Deliverfile">Deliverfile</a> &bull;
   <a href="/ProductHunt/metadata">metadata</a>
 </p>
 ----
@@ -136,9 +163,9 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 
 <p align="center">
-  <a href="/BeMyEyes/">Overview</a> &bull; 
-  <a href="/BeMyEyes/Fastfile">Fastfile</a> &bull; 
-  <a href="/BeMyEyes/Deliverfile">Deliverfile</a> &bull; 
+  <a href="/BeMyEyes/">Overview</a> &bull;
+  <a href="/BeMyEyes/Fastfile">Fastfile</a> &bull;
+  <a href="/BeMyEyes/Deliverfile">Deliverfile</a> &bull;
   <a href="/BeMyEyes/actions/get_global_value.rb">get_global_value</a>
 </p>
 ----
@@ -158,10 +185,10 @@ A description on how the setup works is available in the [Overview](/SunApps).
 
 
 <p align="center">
-  <a href="/SunApps/">Overview</a> &bull; 
-  <a href="/SunApps/Fastfile">Fastfile</a> &bull; 
-  <a href="/SunApps/Deliverfile">Deliverfile</a> &bull; 
-  <a href="/SunApps/Snapfile">Snapfile</a> &bull; 
+  <a href="/SunApps/">Overview</a> &bull;
+  <a href="/SunApps/Fastfile">Fastfile</a> &bull;
+  <a href="/SunApps/Deliverfile">Deliverfile</a> &bull;
+  <a href="/SunApps/Snapfile">Snapfile</a> &bull;
   <a href="/SunApps/Appfile">Appfile</a> &bull;
   <a href="/SunApps/snapshot.js">snapshot.js</a>
 </p>
@@ -182,8 +209,8 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 
 
 <p align="center">
-  <a href="/Touchwonders/">Overview</a> &bull; 
-  <a href="/Touchwonders/Fastfile">Fastfile</a> &bull; 
+  <a href="/Touchwonders/">Overview</a> &bull;
+  <a href="/Touchwonders/Fastfile">Fastfile</a> &bull;
   <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
 ----
@@ -201,7 +228,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 - Get GitHub Release
 
 <p align="center">
-  <a href="https://github.com/KrauseFx/fastlane/tree/master/fastlane">Overview</a> &bull; 
+  <a href="https://github.com/KrauseFx/fastlane/tree/master/fastlane">Overview</a> &bull;
   <a href="https://github.com/KrauseFx/fastlane/blob/master/fastlane/Fastfile">Fastfile</a>
 </p>
 ----

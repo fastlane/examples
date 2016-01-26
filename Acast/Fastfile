@@ -1,0 +1,71 @@
+fastlane_version "1.50.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/[webhook-url]" # Webhook URL created in Slack
+  end
+
+  desc "Installs FixCode which disables the \"Fix Issue\" button in Xcode"
+  lane :xcode do
+    install_xcode_plugin(
+      url: "https://github.com/fastlane/FixCode/releases/download/0.2.0/FixCode.xcplugin.zip"
+    )
+  end
+
+  desc "Fetches the provisioning profiles so you can build locally and deploy to your device"
+  lane :certs do
+    match(app_identifier: "com.acast.app.debug", type: "development")
+    match(app_identifier: "com.acast.app.native.production.internalbeta", type: "appstore")
+    match(app_identifier: "com.acast.app.native.production", type: "appstore")
+  end
+
+  desc "Runs all the unit and ui tests"
+  lane :test do
+    cocoapods
+    if is_ci
+      scan(skip_slack: false)
+    else
+      scan
+    end
+  end
+
+  desc "Creates new screenshots and uploads them to iTunes Connect"
+  lane :screens do
+    cocoapods
+    match(app_identifier: "com.acast.app.debug", type: "development")
+    snapshot
+    frameit
+    deliver(app: 925311796, app_identifier: "com.acast.app.native.production", skip_metadata: true, force: true)
+  end
+
+  desc "Submits a new Beta Build to Apple TestFlight"
+  lane :beta do
+    cocoapods
+    match(app_identifier: "com.acast.app.native.production.internalbeta", type: "appstore")
+    gym(configuration: "Internal Beta")
+    pilot(app_identifier: "com.acast.app.native.production.internalbeta")
+  end
+
+  desc "Deploys a new version to the App Store"
+  lane :deploy do
+    cocoapods
+    match(app_identifier: "com.acast.app.native.production", type: "appstore")
+    gym(configuration: "Release")
+    deliver(force: true)
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+  end
+
+  error do |lane, exception|
+    if is_ci
+      slack(
+        message: exception.message,
+        success: false
+      )
+    end
+  end
+end

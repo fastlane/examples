@@ -1,0 +1,18 @@
+devices([
+  "iPhone 6",
+  "iPhone 6 Plus",
+  "iPhone 5",
+  "iPhone 4s"
+])
+
+languages([
+  "en-US"
+])
+
+scheme "Acast"
+
+configuration "Debug"
+
+clean true
+
+clear_previous_screenshots true
