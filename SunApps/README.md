@@ -32,7 +32,7 @@ New apps are created using the `produce` action. The initial version is filled i
 
 ### Appfile
 
-The `Appfile` contains the same Apple ID for every app, but a dymanic bundle identifier based on the current directory.
+The `Appfile` contains the same Apple ID for every app, but a dynamic bundle identifier based on the current directory.
 
 You could also define the app identifier like this:
 
