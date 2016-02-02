@@ -29,7 +29,7 @@ languages([
 # Where should the resulting screenshots be stored?
 screenshots_path "./screenshots"
 
-clear_previous_screenshots
+clear_previous_screenshots true
 
 # JavaScript UIAutomation file
 js_file './scripts/MindNode.js'
