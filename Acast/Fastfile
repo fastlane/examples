@@ -4,19 +4,50 @@ default_platform :ios
 
 platform :ios do
   before_all do
+    if File.exist?("appleId")
+      ENV["DEVELOPER_EMAIL"] = File.read("appleId")
+    else
+      ENV["DEVELOPER_EMAIL"] = "jagcesar@example.com"
+    end
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/[webhook-url]" # Webhook URL created in Slack
   end
 
-  desc "Installs FixCode which disables the \"Fix Issue\" button in Xcode"
-  lane :xcode do
+  desc "Call this lane when setting up a new development machine"
+  desc "Remember to install Cocoapods before you run this by running `sudo gem install cocoapods`"
+  desc "It does the following:"
+  desc "- Asks you to enter your apple-id which will be used to authorize you on iTunes Connect"
+  desc "- Copies the device frames we use for our screenshots to your home directory"
+  desc "- Installs the pods our app is dependant on"
+  desc "- Installs Xcode CLI"
+  desc "- Installs Homebrew"
+  desc "- Installs SwiftLint"
+  desc "- Installs FixCode"
+  desc "- Downloads and installs the required provisioning profiles"
+  lane :setup do
+    appleId = prompt(text: "Welcome to the Acast iOS Team!❤️\nEnter your apple-id: ")
+    File.write("appleId", appleId)
+    ENV["DEVELOPER_EMAIL"] = File.read("appleId")
+    sh "cp -r screenshots/.frameit/ ~/"
+    cocoapods
+    if !File.exist?("/usr/bin/xcode-select")
+      sh "xcode-select --install"
+    end
+    if File.exist?("/usr/local/bin/brew")
+      sh "brew update"
+    else
+      sh "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+    end
+    sh "brew install swiftlint"
     install_xcode_plugin(
       url: "https://github.com/fastlane/FixCode/releases/download/0.2.0/FixCode.xcplugin.zip"
     )
+    certs
   end
 
-  desc "Fetches the provisioning profiles so you can build locally and deploy to your device"
+  desc "Downloads the provisioning profiles so you can build locally and deploy to your device"
   lane :certs do
     match(app_identifier: "com.acast.app.debug", type: "development")
+    match(app_identifier: "com.acast.app.native.production.internalbeta", type: "development")
     match(app_identifier: "com.acast.app.native.production.internalbeta", type: "appstore")
     match(app_identifier: "com.acast.app.native.production", type: "appstore")
   end
@@ -31,13 +62,19 @@ platform :ios do
     end
   end
 
-  desc "Creates new screenshots and uploads them to iTunes Connect"
-  lane :screens do
-    cocoapods
-    match(app_identifier: "com.acast.app.debug", type: "development")
-    snapshot
-    frameit
-    deliver(app: 925311796, app_identifier: "com.acast.app.native.production", skip_metadata: true, force: true)
+  desc "Bumps version. Type: patch"
+  lane :version_patch do
+    increment_version_number(bump_type: "patch")
+  end
+
+  desc "Bumps version. Type: minor"
+  lane :version_minor do
+    increment_version_number(bump_type: "minor")
+  end
+
+  desc "Bumps version. Type: major"
+  lane :version_major do
+    increment_version_number(bump_type: "major")
   end
 
   desc "Submits a new Beta Build to Apple TestFlight"
@@ -48,16 +85,33 @@ platform :ios do
     pilot(app_identifier: "com.acast.app.native.production.internalbeta")
   end
 
-  desc "Deploys a new version to the App Store"
+  desc "Uploads the metadata to iTunes Connect"
+  lane :meta do
+    deliver(app: 925311796, app_identifier: "com.acast.app.native.production", skip_screenshots: true, skip_upload: true, force: true)
+  end
+
+  desc "Creates new screenshots and uploads them to iTunes Connect"
+  lane :screenshots do
+    cocoapods
+    match(app_identifier: "com.acast.app.debug", type: "development")
+    snapshot
+    frameit
+    deliver(app: 925311796, app_identifier: "com.acast.app.native.production", skip_metadata: true, skip_upload: true, force: true)
+  end
+
+  desc "Compiles the app, uploads it to iTunes Connect and submits it for review"
   lane :deploy do
     cocoapods
     match(app_identifier: "com.acast.app.native.production", type: "appstore")
     gym(configuration: "Release")
-    deliver(force: true)
+    deliver(force: true, skip_screenshots: true, skip_metadata: true, submit_for_review: true)
   end
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful
+    if !is_ci
+      notification(subtitle: "Fastlane", message: "Finished successfully 🙌")
+    end
   end
 
   error do |lane, exception|
@@ -66,6 +120,11 @@ platform :ios do
         message: exception.message,
         success: false
       )
+    else
+      notification(subtitle: "Fastlane encountered an error", message: exception.message)
     end
   end
 end
+
+# More information about multiple platforms in fastlane: https://github.com/KrauseFx/fastlane/blob/master/docs/Platforms.md
+# All available actions: https://github.com/KrauseFx/fastlane/blob/master/docs/Actions.md
