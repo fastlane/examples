@@ -4,27 +4,22 @@
       "fonts": [
         {
           "font": "./fonts/AlwynNewRd-Rg.otf",
-          "fontSize": 36,
           "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         },
         {
           "font": "./fonts/Chinese.ttf",
-          "fontSize": 28,
           "supported": ["zcmn-Hans"]
         },
         {
           "font": "./fonts/Japanese.ttf",
-          "fontSize": 28,
           "supported": ["ja-JP"]
         },
         {
           "font": "./fonts/Korean.ttc",
-          "fontSize": 28,
           "supported": ["ko-KR"]
         },
         {
           "font": "./fonts/Russian.ttf",
-          "fontSize": 30,
           "supported": ["ru-RU"]
         }
       ]
