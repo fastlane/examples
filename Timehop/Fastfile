@@ -36,11 +36,11 @@ lane :beta do
   ensure_git_status_clean
   ensure_git_in_sync
 
-  # slack(
-    # message: "Beta incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
-    # channel: "#ios",
-    # default_payloads: [:git_author]
-  # )
+  slack(
+    message: "Beta incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
 
   cocoapods
 
@@ -101,11 +101,11 @@ lane :gamma do
   ensure_git_status_clean
   ensure_git_in_sync
 
-  # slack(
-    # message: "Gamma incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
-    # channel: "#ios",
-    # default_payloads: [:git_author]
-  # )
+  slack(
+    message: "Gamma incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
 
   cocoapods
 
@@ -166,11 +166,11 @@ lane :appstore do
   ensure_git_status_clean
   ensure_git_in_sync
 
-  # slack(
-    # message: "App Store build incoming",
-    # channel: "#ios",
-    # default_payloads: [:git_author]
-  # )
+  slack(
+    message: "App Store build incoming",
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
 
   cocoapods
 

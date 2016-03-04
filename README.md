@@ -47,7 +47,7 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 <p align="center">
   <a href="/Timehop/">Overview</a> &bull;
-  <a href="/Timehop/Fastfile">Fastfile</a> &bull;
+  <a href="/Timehop/Fastfile">Fastfile</a>
 </p>
 ----
 
