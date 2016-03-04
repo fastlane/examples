@@ -12,22 +12,22 @@ end
 
 desc "Install the necessary distribution certificates and private keys to sign the app. Ask a Timehop employee for the shared password to unlock the private keys."
 lane :keys do
-  Actions.sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/app_store.cer")
-  Actions.sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/dist_enterprise.cer")
-  Actions.sh("security import ../certs/app_store.p12 -k login.keychain")
-  Actions.sh("security import ../certs/dist_enterprise.p12 -k login.keychain")
+  sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/app_store.cer")
+  sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/dist_enterprise.cer")
+  sh("security import ../certs/app_store.p12 -k login.keychain")
+  sh("security import ../certs/dist_enterprise.p12 -k login.keychain")
 end
 
 desc "Install the Timehop Xcode templates"
 lane :templates do
-  Actions.sh("rm -rf ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
-  Actions.sh("mkdir -p ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
-  Actions.sh("cp -R ../Templates/* ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+  sh("rm -rf ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+  sh("mkdir -p ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+  sh("cp -R ../Templates/* ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
 end
 
 desc "Send a notification when a build is done processing in iTunes Connect"
 lane :watch do
-  Actions.sh("watchbuild -a com.timehop.ios.Timehop -u doc@timehop.com")
+  sh("watchbuild -a com.timehop.ios.Timehop -u doc@timehop.com")
 end
 
 desc "Submit a new Beta Build to HockeyApp"
@@ -37,7 +37,7 @@ lane :beta do
   ensure_git_in_sync
 
   slack(
-    message: "Beta incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
+    message: "Beta incoming from branch " + sh("git rev-parse --abbrev-ref HEAD"),
     channel: "#ios",
     default_payloads: [:git_author]
   )
@@ -45,7 +45,7 @@ lane :beta do
   cocoapods
 
   # Get and format all the commits since the last version bump commit.
-  notes = Actions.sh("cd ../;git log --pretty=format:'%s %h' | grep -i '^version bump [0-9]\\{12\\}\\b' | awk '{print $NF}' | head -n1 | xargs -I{} git log --pretty=format:'* %s (%an)' {}...HEAD")
+  notes = changelog_from_git_commits
   notes = notes + "\n\n" + "[View diff on Github](#{compare_url})"
 
   # Bump the CFBundleVersion
@@ -102,7 +102,7 @@ lane :gamma do
   ensure_git_in_sync
 
   slack(
-    message: "Gamma incoming from branch " + Actions.sh("git rev-parse --abbrev-ref HEAD"),
+    message: "Gamma incoming from branch " + sh("git rev-parse --abbrev-ref HEAD"),
     channel: "#ios",
     default_payloads: [:git_author]
   )
@@ -259,7 +259,7 @@ lane :facebook do
   # Zip the app.
   app_path = path + "/Build/Products/Release-iphonesimulator/"
   zip_path = "~/Desktop/Timehop.zip"
-  Actions.sh("cd #{app_path};zip -r #{zip_path} Timehop.app")
+  sh("cd #{app_path};zip -r #{zip_path} Timehop.app")
 
   clean_build_artifacts
 end
@@ -324,14 +324,14 @@ lane :screenshots do
   # Copy the screenshots to the directory for each language.
   Dir.foreach('./screenshots') do |filename|
     next if filename == '.' or filename == '..' or !File.directory?("./metadata/#{filename}")
-    Actions.sh("rm ./screenshots/#{filename}/*.*")
-    Actions.sh("cp #{directory}/* ./screenshots/#{filename}/")
+    sh("rm ./screenshots/#{filename}/*.*")
+    sh("cp #{directory}/* ./screenshots/#{filename}/")
   end
 
   puts "Use the deliver command to upload the metadata"
 
-  Actions.sh("git add ./screenshots")
-  Actions.sh("git commit -m 'Update app store screenshots'")
+  sh("git add ./screenshots")
+  sh("git commit -m 'Update app store screenshots'")
   push_to_git_remote
 end
 
@@ -367,7 +367,7 @@ def set_build_number(build_number = nil)
 
   puts "Setting build number to #{build_number}"
   Actions.lane_context[SharedValues::BUILD_NUMBER] = build_number
-  Actions.sh("/usr/libexec/PlistBuddy -c 'Set CFBundleVersion #{build_number}' ../TimehopThree/TimehopThree-Info.plist")
+  sh("/usr/libexec/PlistBuddy -c 'Set CFBundleVersion #{build_number}' ../TimehopThree/TimehopThree-Info.plist")
 end
 
 def set_version_number(version_number = nil)
@@ -375,7 +375,7 @@ def set_version_number(version_number = nil)
 
   puts "Setting version number to #{version_number}"
   Actions.lane_context[SharedValues::VERSION_NUMBER] = version_number
-  Actions.sh("/usr/libexec/PlistBuddy -c 'Set CFBundleShortVersionString #{version_number}' ../TimehopThree/TimehopThree-Info.plist")
+  sh("/usr/libexec/PlistBuddy -c 'Set CFBundleShortVersionString #{version_number}' ../TimehopThree/TimehopThree-Info.plist")
 end
 
 def archive_destination(filename = nil)
@@ -391,8 +391,8 @@ def archive_destination(filename = nil)
 end
 
 def compare_url
-  last_bump_hash = Actions.sh("cd ../;git log --pretty=format:'%s %h' | grep -i '^version bump [0-9]\\{12\\}\\b' | awk '{print $NF}' | head -n1").strip
-  current_hash = Actions.sh("git rev-parse HEAD").strip
+  last_bump_hash = sh("cd ../;git log --pretty=format:'%s %h' | grep -i '^version bump [0-9]\\{12\\}\\b' | awk '{print $NF}' | head -n1").strip
+  current_hash = sh("git rev-parse HEAD").strip
 
   "https://github.com/timehop/TimehopThree-iOS/compare/#{last_bump_hash}...#{current_hash}"
 end
