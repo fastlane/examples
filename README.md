@@ -34,6 +34,23 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
+### [Timehop](https://timehop.com)
+
+[![Timehop logo](Logos/Timehop.png)](https://timehop.com)
+
+🎶 **Traveling in time using fastlane**
+
+- Automatic generation of the changelog
+- Advanced manual key management
+- Printing out random squirrels and boats
+- Table flips
+
+<p align="center">
+  <a href="/Timehop/">Overview</a> &bull;
+  <a href="/Timehop/Fastfile">Fastfile</a> &bull;
+</p>
+----
+
 ### [Fitbay](https://fitbay.com)
 [![fastlane Logo](Logos/Fitbay.png)](https://fitbay.com)
 
