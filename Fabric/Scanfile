@@ -1,0 +1,3 @@
+scheme "Fabric"
+device "iPhone 6"
+skip_slack true

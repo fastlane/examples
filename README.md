@@ -70,6 +70,24 @@ This repository contains a few `fastlane` example setups that help you getting s
 </p>
 ----
 
+### [Fabric app](https://fabric.io/home)
+[![Fabric app icon](Logos/FabricApp.png)](https://itunes.apple.com/us/app/fabric-real-time-alerts-analytics/id1077938720?mt=8)
+
+:womans_clothes: **Standard Setup**
+
+- Deploy updates through Crashlytics Beta.
+- Submit to the AppStore with screenshots and metadata.
+- Code generation for xib names, identifiers, etc using [`R.swift`](https://github.com/mac-cain13/R.swift)
+
+
+<p align="center">
+  <a href="/Fabric/">Overview</a> &bull;
+  <a href="/Fabric/Fastfile">Fastfile</a> &bull;
+  <a href="/Fabric/Snapfile">Snapfile</a> &bull;
+  <a href="/Fabric/Appfile">Appfile</a>
+</p>
+----
+
 ### [Artsy eidolon](https://github.com/artsy/eidolon)
 [![Artsy](Logos/Artsy.png)](https://github.com/artsy/eidolon)
 
@@ -254,4 +272,3 @@ If you like [fastlane](https://fastlane.tools) and would like to help this proje
 
 # Code of Conduct
 Help us keep `fastlane` open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastlane/code-of-conduct).
-
