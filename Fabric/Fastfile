@@ -1,0 +1,205 @@
+fastlane_version "1.62.0"
+REQUIRED_XCODE_VERSION = "7.2.1"
+default_platform :ios
+
+platform :ios do
+  before_all do
+    git_pull(only_tags: true)
+  end
+
+  after_all do
+    push_git_tags
+  end
+
+  lane :test do
+    scan
+  end
+
+  def change_log_since_last_tag
+    # http://git-scm.com/docs/pretty-formats
+    # <short hash> <commit title>
+    return changelog_from_git_commits(pretty: '%h %s')
+  end
+
+  def version_string(version_number, build_number)
+    "#{version_number} (#{build_number})"
+  end
+
+  def tag_name(build_type, version_number, build_number)
+    "#{build_type}/#{version_number}/#{build_number}"
+  end
+
+  def load_keys
+    begin
+      import("keys")
+    rescue => exception
+      UI.error("fastlane/keys file not found. To use this Fastfile, copy fastlane/keys.template into fastlane/keys and fill in the values")
+      raise exception
+    end
+  end
+
+  private_lane :verify_xcode_version do
+    ensure_xcode_version(version: REQUIRED_XCODE_VERSION)
+  end
+
+  desc "Build and submit the app on Crashlytics Beta"
+  lane :enterprise do |options|
+    load_keys
+
+    only_build = options[:only_build]
+
+    unless only_build
+      ensure_git_status_clean
+
+      version_number = options[:version_number] || get_version_number
+      bump_version_number = !!options[:version_number]
+      if bump_version_number
+        increment_version_number(version_number: version_number)
+      end
+
+      build_number = increment_build_number
+      complete_version_number = version_string(version_number, build_number)
+
+      commit_version_bump(
+        message: "Version bump to #{complete_version_number}",
+        xcodeproj: "Fabric.xcodeproj"
+      )
+
+      change_log = change_log_since_last_tag
+      notify_testers = false unless options[:notify_testers]
+    end
+
+    sigh(output_path: "/tmp")
+    gym(
+      scheme: "Fabric Enterprise",
+      use_legacy_build_api: true
+    )
+
+    unless only_build
+      set_github_release(
+        repository_name: "crashlytics/Fabric-iOS",
+        api_token: ENV["GITHUB_API_TOKEN"],
+        name: complete_version_number,
+        tag_name: tag_name("enterprise", version_number, build_number),
+        commitish: git_branch,
+        description: change_log,
+        is_prerelease: true
+      )
+
+      crashlytics(
+        api_token: ENV["CRASHLYTICS_API_TOKEN"],
+        build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
+        notes: change_log,
+        notifications: notify_testers
+      )
+
+      slack(
+        message: "New build of Fabric β v#{complete_version_number}\nRelease notes:\n #{change_log}",
+        channel: "#general"
+      )
+
+      clean_build_artifacts
+      rocket
+    end
+  end
+
+  lane :screenshots do
+    load_keys
+
+    snapshot
+  end
+
+  lane :update_metadata do
+    load_keys
+
+    deliver
+  end
+
+  lane :testflight do |options|
+    load_keys
+
+    ensure_git_branch(
+      branch: "(master|release\\S+|hotfix\\S+)"
+    )
+
+    ensure_git_status_clean
+
+    verify_xcode_version
+
+    version_number = options[:version_number]
+
+    raise "Missing version number: use version_number parameter" unless version_number != nil
+
+    increment_version_number(version_number: version_number)
+    build_number = increment_build_number
+    complete_version_number = version_string(version_number, build_number)
+
+    commit_version_bump(
+      message: "Version bump to #{complete_version_number}",
+      xcodeproj: "Fabric.xcodeproj"
+    )
+
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number}"
+
+    skip_metadata = options[:skip_metadata]
+
+    unless skip_metadata == true
+      clear_derived_data
+      screenshots
+      update_metadata
+    else
+      Helper.log.info("Skipping taking screenshots and uploading metadata".green)
+    end
+
+    clean_build_artifacts
+    clear_derived_data
+
+    sigh(output_path: "/tmp")
+    gym(
+      scheme: "Fabric",
+      configuration: "Release",
+      clean: true
+    )
+
+    testflight(
+      changelog: change_log,
+      skip_submission: true,
+      distribute_external: false
+    )
+
+    set_github_release(
+      repository_name: "crashlytics/Fabric-iOS",
+      api_token: ENV["GITHUB_API_TOKEN"],
+      name: complete_version_number,
+      tag_name: tag_name("testflight", version_number, build_number),
+      commitish: git_branch,
+      description: change_log_since_last_tag,
+      is_prerelease: false
+    )
+
+    slack(
+      message: "Submitted build of Fabric to TestFlight: v#{complete_version_number}",
+      channel: "#general"
+    )
+
+    rocket
+  end
+
+  lane :carthage do |options|
+    verify_xcode_version
+
+    carthage(
+      command: options[:update] ? "update" : "bootstrap",
+      platform: "iOS",
+      use_binaries: false
+    )
+  end
+
+  lane :code_gen do
+    root_directory = "#{File.expand_path(File.dirname(__FILE__))}/../"
+
+    sdk_path = sh("xcodebuild -version -sdk iphoneos9.2 Path")
+
+    sh("#{root_directory}/Pods/R.swift/rswift -p \"#{root_directory}/Fabric.xcodeproj\" -t Fabric --bundleIdentifier io.fabric.ios --productModuleName Fabric --buildProductsDir \"#{root_directory}\" --developerDir \"#{root_directory}\" --sourceRoot \"#{root_directory}\" --sdkRoot \"#{sdk_path}\" \"#{root_directory}/Fabric/\"")
+  end
+end
