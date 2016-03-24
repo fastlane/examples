@@ -263,8 +263,8 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 - Get GitHub Release
 
 <p align="center">
-  <a href="https://github.com/KrauseFx/fastlane/tree/master/fastlane">Overview</a> &bull;
-  <a href="https://github.com/KrauseFx/fastlane/blob/master/fastlane/Fastfile">Fastfile</a>
+  <a href="https://github.com/fastlane/fastlane/tree/master/fastlane/fastlane">Overview</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/fastlane/Fastfile">Fastfile</a>
 </p>
 ----
 
