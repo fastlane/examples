@@ -75,8 +75,8 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 :womans_clothes: **Standard Setup**
 
-- Deploy updates through Crashlytics Beta.
-- Submit to the AppStore with screenshots and metadata.
+- Deploy updates through Crashlytics Beta
+- Submit to the AppStore with screenshots and metadata
 - Code generation for xib names, identifiers, etc using [`R.swift`](https://github.com/mac-cain13/R.swift)
 
 
@@ -130,11 +130,11 @@ This repository contains a few `fastlane` example setups that help you getting s
 
 :musical_note: **Standard Setup**
 
-- Deployment to iTunes Connect.
-- Building acceptance tests builds with Frank.
-- Managing Certificates/Provisioning Profiles.
-- CI steps as lanes.
-- Project setup.
+- Deployment to iTunes Connect
+- Building acceptance tests builds with Frank
+- Managing Certificates/Provisioning Profiles
+- CI steps as lanes
+- Project setup
 
 <p align="center">
   <a href="/SoundCloud">Overview</a> &bull;
@@ -251,11 +251,11 @@ A description on how the setup works is available in the [Overview](/SunApps).
 
 :bike: **Shared Fastfile for multiple projects**
 
-- Maintain and Deploy multiple of Apps and Projects.
-- Import external `Fastfile` from external repo.
-- Load fastlane configuration YAML file.
-- Create/Renew/Download profiles for multiple targets.
-- Custom `load_release_notes` action.
+- Maintain and Deploy multiple of Apps and Projects
+- Import external `Fastfile` from external repo
+- Load fastlane configuration YAML file
+- Create/Renew/Download profiles for multiple targets
+- Custom `load_release_notes` action
 
 A description on how the setup works is available in the [Overview](/Touchwonders).
 
