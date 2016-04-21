@@ -123,6 +123,23 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Wikipedia/Appfile">Appfile</a> &bull;
   <a href="/Wikipedia/metadata/">Metadata</a>
 </p>
+---
+
+### [SoundCloud](https://www.soundcloud.com)
+[![SoundCloud](Logos/SoundCloud.png)](https://www.soundcloud.com)
+
+:musical_note: **Standard Setup**
+
+- Deployment to iTunes Connect.
+- Building acceptance tests builds with Frank.
+- Managing Certificates/Provisioning Profiles.
+- CI steps as lanes.
+- Project setup.
+
+<p align="center">
+  <a href="/SoundCloud">Overview</a> &bull;
+  <a href="/SoundCloud/Fastfile">Fastfile</a>
+</p>
 ----
 
 ### [Firefox](https://github.com/mozilla/firefox-ios) by Mozilla
@@ -249,7 +266,6 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
 ----
-
 
 ### [fastlane](https://fastlane.tools)
 [![fastlane Logo](Logos/fastlane.png)](https://fastlane.tools)
