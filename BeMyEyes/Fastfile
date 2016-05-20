@@ -62,11 +62,11 @@ lane :beta_dev do
     configuration: "ReleaseDev",
   )
   ENV["BME_APP_TITLE"] = "Be My Eyes – Alpha"
-  deliver(beta: true)
+  deliver(force: true)
   
   slack(
-    message: "New Development (Alpha) version pushed to TestFlight.",
-    default_payloads: [:git_branch, :git_author]
+   message: "New Development (Alpha) version pushed to TestFlight.",
+   default_payloads: [:git_branch, :git_author]
   )
 end
 
@@ -77,11 +77,11 @@ lane :beta_staging do
   )
   ENV["BME_APP_TITLE"] = "Be My Eyes – Beta"
   deliver(
-     beta: true
+     force: true
   )
   slack(
-    message: "New Staging (Beta) version pushed to TestFlight.",
-    default_payloads: [:git_branch, :git_author]
+   message: "New Staging (Beta) version pushed to TestFlight.",
+   default_payloads: [:git_branch, :git_author]
   )
 end
 
@@ -91,7 +91,7 @@ lane :beta_production do
     configuration: "Release",
   )
   deliver(
-    beta: true
+    force: true
   )
   slack(
     message: "New Production version pushed to TestFlight.",
@@ -105,7 +105,7 @@ lane :production do
     configuration: "Release",
   )
   deliver(
-    skip_deploy: true
+    
   )
   slack(
     message: "New Production version pushed to App Store.",
@@ -115,7 +115,7 @@ end
 
 
 after_all do |lane|
-  notification(subtitle:"fastlane finished '#{lane}'") # Mac OS X Notification
+  notify "Fastlane finished '#{lane}'" # Mac OS X Notification
 end
 
 
