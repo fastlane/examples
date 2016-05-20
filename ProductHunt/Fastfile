@@ -44,10 +44,7 @@ platform :ios do
   lane :beta do
     build_app
 
-    deliver(
-      skip_deploy: true,
-      beta: true
-    )
+    pilot
 
     commit_version_bump(
       message: 'Build Version Bump by fastlane',
