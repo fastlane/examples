@@ -270,7 +270,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 ### [QuizUp](https://www.quizup.com)
 [![QuizUp](Logos/QuizUp.png)](https://www.quizup.com)
 
-:rocket: **Advanced - Multiple Environments**
+:zap: **Advanced - Multiple Environments**
 
 - Deployment to iTunes Connect
 - Deployment to Hockey App

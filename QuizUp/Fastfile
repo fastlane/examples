@@ -4,7 +4,7 @@ default_platform :ios
 
 platform :ios do
 
-require 'aws-sdk'
+  require 'aws-sdk'
 
 ############################################### Internal Builds ###############################################
 
@@ -41,9 +41,7 @@ require 'aws-sdk'
     
     clean_build_artifacts
 
-    slack(
-      message: "Successfully deployed daily."
-    )
+    slack(message: "Successfully deployed daily.")
 
     push_to_git_remote
   end
@@ -82,9 +80,7 @@ require 'aws-sdk'
         
     clean_build_artifacts
      
-    slack(
-      message: "Successfully deployed hourly."
-    )
+    slack(message: "Successfully deployed hourly.")
 
     push_to_git_remote
 
@@ -182,9 +178,7 @@ require 'aws-sdk'
       channel: ENV["QA_SLACK_CHANNEL"]
     )
 
-    slack(
-      message: "Successfully submitted #{release_version_number}."
-    )
+    slack(message: "Successfully submitted #{release_version_number}.")
 
     add_git_tag(tag: "v#{release_version_number}")
 
@@ -252,10 +246,7 @@ require 'aws-sdk'
   end
   
   error do |lane, exception|
-     slack(
-       message: exception.message,
-       success: false
-     )
+     slack(message: exception.message, success: false)
   end
 
 end

@@ -12,9 +12,9 @@ module Fastlane
             end
         end
 
-        if localesWithMissingChangeLog.empty? == false
-            missingChangeLogString = localesWithMissingChangeLog.join(', ')        
-            raise "Ran out of localized change logs in %s" % missingChangeLogString
+        unless localesWithMissingChangeLog.empty?
+            missingChangeLogString = localesWithMissingChangeLog.join(', ')
+            UI.user_error!("Ran out of localized change logs in {#missingChangeLogString}")
         end
 
         locales.each do |locale|
@@ -26,10 +26,10 @@ module Fastlane
         begin
           Actions.sh("git add -u")
           Actions.sh("git commit -m 'Updated changelogs.'")
-          rescue
-            # In case there are no changes.
-            puts("No changes to localized changelogs")
-          end
+        rescue
+          # In case there are no changes.
+          UI.message "No changes to localized changelogs"
+        end
 
       end
 
@@ -52,8 +52,8 @@ module Fastlane
       def self.remove_change_log_from_file(locale)
         file_path = self.change_log_file_path(locale)
         text = ''
-        File.open(file_path,"r"){|f|f.gets;text=f.read}
-        File.open(file_path,"w+"){|f| f.write(text)}
+        File.open(file_path, "r") { |f| f.gets; text = f.read }
+        File.open(file_path, "w+") { |f| f.write(text) }
       end
       
       def self.set_new_change_log(locale, change_log)
