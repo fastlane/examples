@@ -12,11 +12,10 @@ module Fastlane
         begin
           Actions.sh("git add -u")
           Actions.sh("git commit -m 'Updated translations'")
-          rescue
+        rescue
             # In case there are no new translations.
-          end
-          
         end
+      end
 
       #####################################################
       # @!group Documentation
@@ -24,6 +23,8 @@ module Fastlane
 
       def self.description
         "Download the latest translations using uhura"
+        "uhura is an internal QuizUp python tool we use to download and install"
+        "translations from OneSky"
       end
 
       def self.authors
