@@ -5,7 +5,7 @@ module Fastlane
 
         s3 = Aws::S3::Resource.new
         file_path = options[:ipa]
-        obj = s3.bucket(ENV['SECRET-PROJECT-BUCKET-NAME']).object(File.basename(file_path))
+        obj = s3.bucket(options[:project_bucket-name]).object(File.basename(file_path))
         obj.upload_file(file_path, acl:'public-read')
       end
 
@@ -30,7 +30,12 @@ module Fastlane
                                       optional: true,
                                       verify_block: proc do |value|
                                          UI.user_error!("Couldn't find ipa file at path '#{value}'") unless File.exist?(value)
-                                      end)
+                                      end),
+          FastlaneCore::ConfigItem.new(key: project_bucket_name,
+                                       env_name: "S3_PROJECT_BUCKET_NAME",
+                                       description: "S3 project bucket name",
+                                       type: String,
+                                       optional: false)
         ]
       end
 
