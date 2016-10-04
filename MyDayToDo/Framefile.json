@@ -1,0 +1,44 @@
+{
+  "default": {
+
+    "title": {
+      "color": "#545454"
+    },
+    "background": "./background.jpg",
+    "padding": 25
+  },
+
+
+  "data": [
+    {
+      "filter": "1_iphone6_1",
+      "keyword": {
+        "color": "#205CCD"
+      }
+    },
+    {
+      "filter": "2_iphone6_2",
+      "keyword": {
+        "color": "#feb909"
+      }
+    },
+    {
+      "filter": "3_iphone6_3",
+      "keyword": {
+        "color": "#aa4dbc"
+      }
+    },
+    {
+      "filter": "4_iphone6_4",
+      "keyword": {
+        "color": "#31bb48"
+      }
+    },
+    {
+      "filter": "5_iphone6_5",
+      "keyword": {
+        "color": "#d21559"
+      }
+    }
+  ]
+}
