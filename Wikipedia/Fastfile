@@ -106,7 +106,7 @@ platform :ios do
     else
       increment_build_number(build_number: get_build_number)
     end
-    get_version_string
+    get_version_number
   end
 
   desc "Increment the app's beta build number, add a tag, and push to the beta branch."
@@ -119,7 +119,7 @@ platform :ios do
 
     increment_build_number
 
-    new_version = get_version_string
+    new_version = get_version_number
     commit_version_bump
     push_to_git_remote(
        local_branch: 'beta',  # optional, aliased by 'branch', default: 'master'
@@ -142,7 +142,7 @@ platform :ios do
 
     increment_build_number(build_number: get_release_build_number)
 
-    new_version = get_version_string
+    new_version = get_version_number
     commit_version_bump
     push_to_git_remote(
        local_branch: 'master',  # optional, aliased by 'branch', default: 'master'
