@@ -284,7 +284,5 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 </p>
 ----
 
-If you like [fastlane](https://fastlane.tools) and would like to help this project by sharing your `Fastfile`, feel free to submit a pull request :+1:
-
 # Code of Conduct
 Help us keep `fastlane` open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastlane/code-of-conduct).
