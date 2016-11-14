@@ -85,7 +85,7 @@ secondary_category "Business"
 
 automatic_release true
 
-ratings_config_path "./ratings_config.json"
+app_rating_config_path "./ratings_config.json"
 
 app_review_information({
   first_name: "Felix",
