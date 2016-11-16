@@ -298,7 +298,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 
 <p align="center">
   <a href="/Zattoo/">Overview</a> &bull;
-  <a href="/Zattoo/Fastfile">Fastfile</a> &bull;
+  <a href="/Zattoo/Fastfile">Fastfile</a>
 </p>
 ----
 
