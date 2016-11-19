@@ -65,6 +65,11 @@ Release a Preview version to TestFlight
 fastlane release_applestore
 ```
 Release a new version for boxes on the Apple Stores
+### screenshots
+```
+fastlane screenshots
+```
+Generate screenshots
 
 ----
 

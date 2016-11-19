@@ -100,6 +100,11 @@ lane :release_applestore do
   reset_git_repo
 end
 
+desc "Generate screenshots"
+lane :screenshots do
+  snapshot
+end
+
 #### Error management ####
 
 error do |lane, exception|
