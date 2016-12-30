@@ -1,0 +1,193 @@
+# Requires
+require 'yaml'
+require_relative 'models/project'
+
+# Fastlane Constants
+fastlane_version "1.54.0"
+default_platform :ios
+default_changelog = "Lots of under the hood changes. Help us look for crashes or anything else unexpected."
+
+# Constants
+TEAM_ID = "XXXXXX"
+USERNAME = "XXXXXXX"
+
+platform :ios do
+
+  ##### Setup ######
+  desc "Install the Xcode version used by SoundCloud"
+  lane :install_xcode do
+    xcode_install(version: "7.3")
+  end
+
+  desc "Install pod dependencies"
+  lane :install_pods do
+    cocoapods
+  end
+
+  desc "Update your AppCode preferences with the project ones"
+  lane :appcode_prefs do
+    sh("bundle exec ../lib/scripts/app_code_sync")
+  end
+
+  desc "Local setup required to work with the iOS project"
+  lane :setup do
+    install_xcode_plugin(
+      url: "https://github.com/fastlane/FixCode/releases/download/0.3.0/FixCode.xcplugin.zip"
+    )
+    dev_certificates_fetch
+    appcode_prefs
+  end
+
+  ##### Apple Member Center ######
+  desc "Update the devices with the ones in devices.txt"
+  lane :update_devices do
+    register_devices(devices_file: 'devices.txt', team_id: TEAM_ID)
+  end
+
+  desc "Fetches the development certificates and provisioning profiles to run the project on real devices"
+  lane :dev_certificates_fetch do
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").app_bundle_id, readonly: true)
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").watchapp_bundle_id, readonly: true)
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").watchextension_bundle_id, readonly: true)
+  end
+
+  desc "Fetches the distribution certificates and provisioning profiles compile the app for AppStore distribution"
+  lane :dist_certificates_fetch do
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").app_bundle_id, readonly: true)
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").watchapp_bundle_id, readonly: true)
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").watchextension_bundle_id, readonly: true)
+  end
+
+  desc "Updates the development provisioning profiles"
+  lane :dev_certificates_update do
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").app_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").watchapp_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+    match(type: "development", app_identifier: SoundCloud::Models::Project.new("Debug").watchextension_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+  end
+
+  desc "Updates the distribution provisioning profiles"
+  lane :dist_certificates_update do
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").app_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").watchapp_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+    match(type: "appstore", app_identifier: SoundCloud::Models::Project.new("AppStore").watchextension_bundle_id, team_id: TEAM_ID, username: USERNAME, readonly: false, force: true)
+  end
+
+  # Test
+  desc "Runs unit tests"
+  lane :unit_tests do |params|
+    scan(output_types: "html, junit")
+  end
+
+  desc "Run acceptance tests"
+  lane :acceptance_tests do
+    build_frank
+    sh "rake spec:cucumber"
+  end
+
+  # CI
+  lane :ci_acceptance do
+    install_pods
+    acceptance_tests
+  end
+
+  lane :ci_master do
+    install_pods
+    sh "rake strings:push"
+    unit_tests
+  end
+
+  lane :ci_release do
+    install_pods
+    unit_tests
+  end
+
+  lane :ci_pr do
+    danger
+  end
+
+  lane :ci_pr_specs do
+    install_pods
+    unit_tests
+  end
+
+  lane :ci_deploy_appstore do
+    install_pods
+    dist_certificates_fetch
+    build_release
+    deploy_appstore
+  end
+
+  # Build
+  desc "Build the project with Debug configuration"
+  lane :build_debug do
+    project = SoundCloud::Models::Project.new("Debug", self.project_base_path)
+    build_local(project: project)
+  end
+
+  desc "Build the project with Release configuration"
+  lane :build_release do
+    project = SoundCloud::Models::Project.new("AppStore", self.project_base_path)
+    build_ci(project: project)
+  end
+
+  desc "Build the project using Frank"
+  lane :build_frank do
+    project = SoundCloud::Models::Project.new("Frank", self.project_base_path)
+    unless File.directory?(project.frank_path)
+      sh "frank update && frank setup --without-cocoa-lumberjack --build-configuration=#{project.config} --target=SoundCloud"
+    end
+    sh "frank build --workspace #{project.workspace} --scheme #{project.scheme} --noclean -configuration #{project.config} | xcpretty"
+  end
+
+  # Deploy
+  desc "Deploy the app to the AppStore (use this only on CI)"
+  lane :deploy_appstore do
+    project = SoundCloud::Models::Project.new("AppStore", self.project_base_path)
+    pilot(skip_submission: true, distribute_external: false, ipa: project.ipa_path, changelog: default_changelog)
+    slack_message(message: "New version of the app successfully deployed! :tada: :tada:", success: true, payload: {})
+  end
+
+  # Private
+
+  def project_base_path
+    File.expand_path("..", Dir.pwd)
+  end
+
+  private_lane :slack_message do |options|
+    message = options[:message]
+    success = options[:success]
+    payload = options[:payload]
+    slack(
+      message: message,
+      channel: "#ios",
+      success: success,
+      payload: payload)
+  end
+
+  private_lane :build_local do |options|
+    project = options[:project]
+    build_number = project.build_number
+    gym(
+      workspace: project.workspace,
+      configuration: project.config,
+      include_symbols: true,
+      scheme: project.scheme,
+    )
+  end
+
+  private_lane :build_ci do |options|
+    project = options[:project]
+    build_number = project.build_number
+    gym(
+      workspace: project.workspace,
+      configuration: project.config,
+      include_symbols: true,
+      scheme: project.scheme,
+      xcargs: "SC_BUILD_NUMBER=#{build_number}",
+      build_path: project.package_path,
+      output_directory: project.package_path,
+      output_name: project.ipa_name,
+      silent: false)
+  end
+
+end

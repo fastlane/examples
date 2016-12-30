@@ -9,7 +9,7 @@ sudo gem install fastlane
 ## Remote Fastfile
 
 In Touchwodners we decided to implement a base collection of standard lanes and actions that we want to share among all our projects.
-To import them we take advantage of [import_from_git](https://github.com/KrauseFx/fastlane/blob/master/docs/Advanced.md#import_from_git) action.
+To import them we take advantage of [import_from_git](https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Advanced.md#import_from_git) action.
 
 At very beginning of every project's Fastfile:
 
@@ -136,4 +136,4 @@ __Step__:
 
 ----
 More information about fastlane can be found on [https://fastlane.tools](https://fastlane.tools).
-The documentation of fastlane can be found on [GitHub](https://github.com/KrauseFx/fastlane)
+The documentation of fastlane can be found on [GitHub](https://github.com/fastlane/fastlane)

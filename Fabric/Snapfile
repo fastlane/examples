@@ -1,0 +1,19 @@
+devices([
+  "iPhone 4s",
+  "iPhone 5",
+  "iPhone 6",
+  "iPhone 6 Plus",
+])
+
+languages([
+  "en-US"
+])
+
+app_identifier "io.fabric.ios"
+scheme "FabricUITests"
+configuration "Debug"
+
+number_of_retries 2
+reinstall_app true
+stop_after_first_error true
+clear_previous_screenshots true

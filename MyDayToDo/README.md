@@ -1,0 +1,3 @@
+[My Day To-Do](https://itunes.apple.com/app/my-day-to-do-task-list-alarm/id1020072048?mt=8) makes use of [frameit](https://github.com/fastlane/frameit) to frame it's screenshots for the App Store. 
+
+This example has a companion [blog post](http://captaindanko.blogspot.com.au/2016/10/framing-your-ios-screenshots-with.html) that talks about the various little details that you need to know to successfully use frameit to frame your App Store screenshots. Have a read of that blog post to know more about this.

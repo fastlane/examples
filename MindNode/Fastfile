@@ -104,10 +104,7 @@ platform :ios do
   desc "This will **not** send an email to all testers, it will only be uploaded to the new TestFlight. "
   lane :beta do
     build_app
-    deliver(
-      skip_deploy: true, 
-      beta: true
-    )
+    pilot
   end
 
   desc "Build, sign and upload a new build to the App Store."

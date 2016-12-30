@@ -1,0 +1,434 @@
+require 'time'
+require 'commander'
+require 'pathname'
+
+fastlane_version "1.57.0"
+
+# Store the current CFBundleVersion and CFBundleShortVersionString in the fastlane context before every lane.
+before_all do
+  Actions.lane_context[SharedValues::VERSION_NUMBER] = get_version_number
+  Actions.lane_context[SharedValues::BUILD_NUMBER] = get_build_number
+end
+
+desc "Install the necessary distribution certificates and private keys to sign the app. Ask a Timehop employee for the shared password to unlock the private keys."
+lane :keys do
+  sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/app_store.cer")
+  sh("security add-trusted-cert -d -r trustRoot -k $HOME/Library/Keychains/login.keychain ../certs/dist_enterprise.cer")
+  sh("security import ../certs/app_store.p12 -k login.keychain")
+  sh("security import ../certs/dist_enterprise.p12 -k login.keychain")
+end
+
+desc "Install the Timehop Xcode templates"
+lane :templates do
+  sh("rm -rf ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+  sh("mkdir -p ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+  sh("cp -R ../Templates/* ~/Library/Developer/Xcode/Templates/File\\ Templates/Timehop")
+end
+
+desc "Send a notification when a build is done processing in iTunes Connect"
+lane :watch do
+  sh("watchbuild -a com.timehop.ios.Timehop -u doc@timehop.com")
+end
+
+desc "Submit a new Beta Build to HockeyApp"
+desc "This will also make sure the profile is up to date"
+lane :beta do
+  ensure_git_status_clean
+  ensure_git_in_sync
+
+  slack(
+    message: "Beta incoming from branch " + sh("git rev-parse --abbrev-ref HEAD"),
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
+
+  cocoapods
+
+  # Get and format all the commits since the last version bump commit.
+  notes = changelog_from_git_commits
+  notes = notes + "\n\n" + "[View diff on Github](#{compare_url})"
+
+  # Bump the CFBundleVersion
+  new_build_number = next_version
+  set_build_number(
+    new_build_number
+  )
+
+  # Check for the necessary provisioning profile and download it from the developer portal if necessary.
+  sigh(
+    output_path: "/tmp",
+    skip_certificate_verification: true,
+    app_identifier: "com.timehop.ios.TimehopEnterprise"
+  )
+
+  # Use the UDID of the newly created provisioning profile.
+  # The Xcode project is configured to read the provision profile UUID through this environmental variable.
+  # See here for more information: https://github.com/fastlane/fastlane/blob/master/docs/CodeSigning.md#deprecated-using-environment-variables
+  ENV["PROFILE_UDID"] = lane_context[SharedValues::SIGH_UDID]
+
+  # Build the app.
+  gym(
+    workspace: "TimehopThree.xcworkspace",
+    configuration: "Beta",
+    scheme: "TimehopThree Beta",
+    export_method: 'enterprise',
+    codesigning_identity: "iPhone Distribution: DOUBLEDUB INC",
+    use_legacy_build_api: true # There's a bug in the new Xcode 7 API that causes problems. This forces use of the old API.
+  )
+
+  # Upload the build to HockeyApp.
+  hockey(
+    api_token: ENV['HOCKEYAPP_TOKEN'],
+    public_identifier: ENV['HOCKEYAPP_BETA_ID'],
+    notes: notes,
+    notes_type: "1",
+    commit_sha: `git rev-parse HEAD`.strip
+  )
+
+  clean_build_artifacts
+
+  commit_version_bump(
+    message: "Version bump " + new_build_number,
+    force: true
+  )
+
+  push_to_git_remote
+end
+
+desc "Submit a new Gamma Build (external beta) to HockeyApp"
+desc "This will also make sure the profile is up to date"
+lane :gamma do
+  ensure_git_status_clean
+  ensure_git_in_sync
+
+  slack(
+    message: "Gamma incoming from branch " + sh("git rev-parse --abbrev-ref HEAD"),
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
+
+  cocoapods
+
+  # Prompts for the HockeyApp release notes.
+  notes = prompt(
+    text: "Enter release notes",
+    multi_line_end_keyword: "END"
+  )
+
+  # Bump the CFBundleVersion
+  new_build_number = next_version
+  set_build_number(
+    new_build_number
+  )
+
+  # Check for the necessary provisioning profile and download it from the developer portal if necessary.
+  sigh(
+    output_path: "/tmp",
+    skip_certificate_verification: true,
+    app_identifier: "com.timehop.ios.TimehopMaybe"
+  )
+
+  # Use the UDID of the newly created provisioning profile.
+  # The Xcode project is configured to read the provision profile UUID through this environmental variable.
+  # See here for more information: https://github.com/fastlane/fastlane/blob/master/docs/CodeSigning.md#deprecated-using-environment-variables
+  ENV["PROFILE_UDID"] = lane_context[SharedValues::SIGH_UDID]
+
+  # Build the app.
+  gym(
+    workspace: "TimehopThree.xcworkspace",
+    configuration: "Gamma",
+    scheme: "TimehopThree Gamma",
+    export_method: 'enterprise'
+  )
+
+  # Upload the build to HockeyApp.
+  hockey(
+    api_token: ENV['HOCKEYAPP_TOKEN'],
+    public_identifier: ENV['HOCKEYAPP_GAMMA_ID'],
+    notes: notes,
+    notes_type: "1",
+    commit_sha: `git rev-parse HEAD`.strip
+  )
+
+  clean_build_artifacts
+
+  commit_version_bump(
+    message: "Version bump " + new_build_number,
+    force: true
+  )
+
+  push_to_git_remote
+end
+
+desc "Deploy a new version to the App Store"
+lane :appstore do
+  ensure_git_branch
+  ensure_git_status_clean
+  ensure_git_in_sync
+
+  slack(
+    message: "App Store build incoming",
+    channel: "#ios",
+    default_payloads: [:git_author]
+  )
+
+  cocoapods
+
+  # Ask for a new CFBundleShortVersionString and bump the CFBundleVersion.
+  new_build_number = next_version
+  version = ask("Enter a new version number: ")
+  set_build_number(
+    new_build_number
+  )
+  set_version_number(
+    version
+  )
+
+  # Check for the necessary provisioning profile and download it from the developer portal if necessary.
+  sigh(
+    output_path: "/tmp",
+    app_identifier: "com.timehop.ios.Timehop"
+  )
+
+  # Use the UDID of the newly created provisioning profile.
+  # The Xcode project is configured to read the provision profile UUID through this environmental variable.
+  # See here for more information: https://github.com/fastlane/fastlane/blob/master/docs/CodeSigning.md#deprecated-using-environment-variables
+  ENV["PROFILE_UDID"] = lane_context[SharedValues::SIGH_UDID]
+
+  # Generate a name for the xcarchive file.
+  # Also generate the destination path which is inside the Timehop dropbox folder.
+  archive_name = version + " - TimehopThree " + Time.now.strftime("%F %H.%M.%S") + ".xcarchive"
+  archive_path = archive_destination(archive_name)
+
+  # Build the app.
+  gym(
+    workspace: "TimehopThree.xcworkspace",
+    configuration: "Release",
+    scheme: "TimehopThree",
+    clean: false,
+    codesigning_identity: "iPhone Distribution: DOUBLEDUB INC (SYMQPHZ6U8)",
+    archive_path: archive_path,
+    export_team_id: "SYMQPHZ6U8",
+    use_legacy_build_api: true # There's a bug in the new Xcode 7 API that causes problems. This forces use of the old API.
+  )
+
+  # Upload the build to iTunes Connect.
+  deliver(
+    force: true,
+    skip_screenshots: true
+  )
+
+  clean_build_artifacts
+
+  commit_version_bump(
+    message: "Version bump " + version + ", " + new_build_number,
+    force: true
+  )
+
+  push_to_git_remote
+end
+
+desc "Build and package the app for submission to Facebook"
+lane :facebook do
+  ensure_git_branch
+  ensure_git_status_clean
+  ensure_git_in_sync
+
+  cocoapods
+
+  # Check for the necessary provisioning profile and download it from the developer portal if necessary.
+  sigh(
+    output_path: "/tmp"
+  )
+
+  # Use the UDID of the newly created provisioning profile.
+  # The Xcode project is configured to read the provision profile UUID through this environmental variable.
+  # See here for more information: https://github.com/fastlane/fastlane/blob/master/docs/CodeSigning.md#deprecated-using-environment-variables
+  ENV["PROFILE_UDID"] = lane_context[SharedValues::SIGH_UDID]
+
+  # Build the app.
+  path = Pathname.getwd.dirname.to_s + "/build"
+  xcbuild(
+    workspace: "TimehopThree.xcworkspace",
+    scheme: "TimehopThree",
+    sdk: "iphonesimulator",
+    configuration: "Release",
+    derivedDataPath: path.to_s
+  )
+
+  # Zip the app.
+  app_path = path + "/Build/Products/Release-iphonesimulator/"
+  zip_path = "~/Desktop/Timehop.zip"
+  sh("cd #{app_path};zip -r #{zip_path} Timehop.app")
+
+  clean_build_artifacts
+end
+
+desc "Edits the release notes for all languages at once and uploads them to iTunes Connect"
+lane :release_notes do
+  ensure_git_branch
+  ensure_git_status_clean
+
+  # Prompt for release notes.
+  notes = prompt(
+    text: "Enter release notes",
+    multi_line_end_keyword: "END"
+  )
+
+  # Update the release notes for every language.
+  Dir.foreach('./metadata') do |filename|
+    next if filename == '.' or filename == '..' or !File.directory?("./metadata/#{filename}")
+    File.open("./metadata/#{filename}/release_notes.txt", 'w') do |file|
+      file.write notes
+    end
+  end
+
+  puts "Use the deliver command to upload the metadata"
+
+  commit_metadata(force: true)
+  push_to_git_remote
+end
+
+desc "Bump both version numbers"
+lane :bump do
+  ensure_git_status_clean
+  ensure_git_in_sync
+
+  # Ask for a new CFBundleShortVersionString and bump the CFBundleVersion.
+  new_build_number = next_version
+  version = ask("Enter a new version number: ")
+  set_build_number(
+    new_build_number
+  )
+  set_version_number(
+    version
+  )
+
+  commit_version_bump(
+    message: "Version bump " + version + ", " + new_build_number,
+    force: true
+  )
+
+  push_to_git_remote
+end
+
+desc "Compare the current git state to the last version bump"
+lane :compare do
+  puts compare_url
+end
+
+desc "Upload screenshots from the specified directory to iTunes Connect"
+lane :screenshots do
+  directory = prompt(:text => "Where are the screenshots located?")
+
+  # Copy the screenshots to the directory for each language.
+  Dir.foreach('./screenshots') do |filename|
+    next if filename == '.' or filename == '..' or !File.directory?("./metadata/#{filename}")
+    sh("rm ./screenshots/#{filename}/*.*")
+    sh("cp #{directory}/* ./screenshots/#{filename}/")
+  end
+
+  puts "Use the deliver command to upload the metadata"
+
+  sh("git add ./screenshots")
+  sh("git commit -m 'Update app store screenshots'")
+  push_to_git_remote
+end
+
+after_all do |lane|
+  ship_it
+  notify("Lane #{lane} completed successfully!")
+end
+
+
+error do |lane, exception|
+  clean_build_artifacts
+  puts "\n(╯°□°）╯︵ ┻━┻\n".red
+  notify("Lane #{lane} failed to complete.")
+end
+
+
+# Helper functions
+
+def next_version
+  Time.now.strftime("%Y%m%d%H%M")
+end
+
+def get_build_number
+  `/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' ../TimehopThree/TimehopThree-Info.plist`.strip
+end
+
+def get_version_number
+  `/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' ../TimehopThree/TimehopThree-Info.plist`.strip
+end
+
+def set_build_number(build_number = nil)
+  raise if build_number.nil?
+
+  puts "Setting build number to #{build_number}"
+  Actions.lane_context[SharedValues::BUILD_NUMBER] = build_number
+  sh("/usr/libexec/PlistBuddy -c 'Set CFBundleVersion #{build_number}' ../TimehopThree/TimehopThree-Info.plist")
+end
+
+def set_version_number(version_number = nil)
+  raise if version_number.nil?
+
+  puts "Setting version number to #{version_number}"
+  Actions.lane_context[SharedValues::VERSION_NUMBER] = version_number
+  sh("/usr/libexec/PlistBuddy -c 'Set CFBundleShortVersionString #{version_number}' ../TimehopThree/TimehopThree-Info.plist")
+end
+
+def archive_destination(filename = nil)
+  raise "non-nil filename required" if filename.nil?
+
+  dropbox_folder = File.expand_path("~/Dropbox (Timehop)")
+  if !File.exist? dropbox_folder
+    dropbox_folder = File.expand_path(ask("Where is your Timehop Dropbox folder?"))
+  end
+  raise "Could not find Timehop Dropbox folder at #{dropbox_folder}" if !File.exist?(dropbox_folder)
+
+  "#{dropbox_folder}/Timehop Product/Tech/iOS Submitted Apps/#{filename}"
+end
+
+def compare_url
+  last_bump_hash = sh("cd ../;git log --pretty=format:'%s %h' | grep -i '^version bump [0-9]\\{12\\}\\b' | awk '{print $NF}' | head -n1").strip
+  current_hash = sh("git rev-parse HEAD").strip
+
+  "https://github.com/timehop/TimehopThree-iOS/compare/#{last_bump_hash}...#{current_hash}"
+end
+
+def ship_it
+  rand = Random.rand(0..1)
+  if rand == 0
+    squirrel
+  elsif rand == 1
+    boat
+  end
+end
+
+def squirrel
+  puts "
+    !!!!
+  !!!!!!!!
+!!!!!!!!!!!   O_O
+!!!  !!!!!!! /@ @\\
+      !!!!!! \\ x /
+      !!!!!!/ m  !m
+       !!!!/ __  |
+       !!!!|/  \\__
+        !!!\\______\\
+  "
+end
+
+def boat
+  puts "
+     .  o ..
+     o . o o.o
+          ...oo
+            __[]__
+         __|_o_o_o\__
+         \\\"\"\"\"\"\"\"\"\"\"/
+          \\. ..  . /
+     ^^^^^^^^^^^^^^^^^^^^
+  "
+end
