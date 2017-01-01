@@ -267,6 +267,31 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 </p>
 ----
 
+### [QuizUp](https://www.quizup.com)
+[![QuizUp](Logos/QuizUp.png)](https://www.quizup.com)
+
+:zap: **Advanced - Multiple Environments**
+
+- Deployment to iTunes Connect
+- Deployment to Hockey App
+- Running unit tests
+- Linting with Swiftlint
+- Managing Certificates/Provisioning Profiles
+- CI steps as lanes
+- Project setup
+- Version Bump & Git Actions
+- Slack Notifications
+- Custom action for internal tranlsation tools
+- Custom action for versioning
+- Custom action for selecting changelogs
+
+<p align="center">
+  <a href="/QuizUp">Overview</a> &bull;
+  <a href="/QuizUp/Fastfile">Fastfile</a>
+</p>
+----
+
+
 ### [fastlane](https://fastlane.tools)
 [![fastlane Logo](Logos/fastlane.png)](https://fastlane.tools)
 

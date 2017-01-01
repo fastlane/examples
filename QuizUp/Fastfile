@@ -1,0 +1,252 @@
+fastlane_version "1.81.0"
+
+default_platform :ios
+
+platform :ios do
+
+  require 'aws-sdk'
+
+############################################### Internal Builds ###############################################
+
+  desc "Release a new daily build"
+  desc ""
+  desc "- Only works on `master branch`"
+  desc "- Updates translations"
+  desc "- Installs cocoapods"
+  desc "- Signs, builds and uploads `QuizUp Enterprise to Hockey Beta App"
+  desc "- Sends success message to `#ios-builds` on slack"
+  desc "- Pushes translations update to master"
+  lane :deploy_daily do
+
+    ensure_git_status_clean
+    ensure_git_branch(branch: "master")
+
+    update_translations
+
+    cocoapods 
+
+    # Build and send the beta to hockey
+    sigh(username: ENV['ENTERPRISE_USER'],
+         app_identifier: "com.plainvanillagames.quizup.beta",
+         skip_install: true)
+    gym(scheme: "QuizUp Enterprise",
+        workspace: "QuizUp.xcworkspace",
+        clean: true)
+    # NOTE: hockey action will use the latest ipa and latest dsym built
+    hockey(
+        api_token: ENV['HOCKEY_APP_TOKEN'],
+        notes: "The Official QuizUp Beta",
+        public_identifier: ENV['HOCKEY_BETA_APP_ID'],
+        notify: false)
+    
+    clean_build_artifacts
+
+    slack(message: "Successfully deployed daily.")
+
+    push_to_git_remote
+  end
+  
+  desc "Release new hourly build"
+  desc ""
+  desc "- Only works on `master` branch"
+  desc "- Installs cocoapods"
+  desc "- Prepares and commits a new build number"
+  desc "- Signs, builds and uploads `Quizup Dogfood Enterprise` target to Hockey Hourly App"
+  desc "- Sends success message to `#ios-builds` on slack"
+  desc "- Pushes new version number update to master"
+  lane :deploy_hourly do
+  
+    ensure_git_status_clean
+    ensure_git_branch(branch: "master")
+
+    cocoapods
+
+    # NOTE: prepare_release_number will call the action increment_builder_number
+    release_version_number = prepare_release_build_number
+    commit_version_bump(message: "Release v#{release_version_number}",
+                        force:true)
+
+    sigh(username: ENV['ENTERPRISE_USER'],
+         app_identifier: "com.plainvanillacorp.quizup.enterprise.dogfood",
+         skip_install: true)
+    gym(scheme: "QuizUp Dogfood Enterprise",
+        workspace: "QuizUp.xcworkspace",
+        clean: true)
+    hockey(
+        api_token: ENV['HOCKEY_APP_TOKEN'],
+        notes: prepare_git_log,
+        public_identifier: ENV['HOCKEY_HOURLY_APP_ID'],
+        notify: false)
+        
+    clean_build_artifacts
+     
+    slack(message: "Successfully deployed hourly.")
+
+    push_to_git_remote
+
+  end
+
+  desc "Upload a beta build to s3"
+  desc ""
+  desc "- Only works on `master branch`"
+  desc "- Installs cocoapods"
+  desc "- Signs, builds and uploads `QuizUp Enterprise` to the web"
+  lane :upload_beta_to_s3 do
+
+    ensure_git_status_clean
+    ensure_git_branch(branch: "master")
+
+    cocoapods 
+
+    sigh(username: ENV['ENTERPRISE_USER'],
+         app_identifier: "com.plainvanillagames.quizup.beta",
+         skip_install: true)
+    gym(scheme: "QuizUp Enterprise",
+        workspace: "QuizUp.xcworkspace",
+        clean: true)
+
+    upload_to_s3
+
+    clean_build_artifacts
+
+  end
+
+############################################### Submitting ###############################################
+
+  desc "Submits a new build to Apple"
+  desc ""
+  desc "Submits the same build to hockey app so beta users will test the same build we are about to ship."
+  desc "- Only works on `release` branch"
+  desc "- Re-installs cocoapods"
+  desc "- Signs, builds and uploads `QuizUp Enterprise` target to hockey"
+  desc "- Signs, builds and uploads `Quizup (App Store)` target to app store"
+  desc "- Uploads `dsysm` of the appstore builds to hockey"
+  desc "- Notifies `#{ENV["QA_SLACK_CHANNEL"]}` and `#{ENV["COMMUNITY_MANAGER_SLACK_CHANNEL"]}` about new submission"
+  desc "- Creates and pushes a new tag to github"
+  lane :submit_ipa do
+  
+    ensure_git_branch(branch: "release")
+
+    cocoapods 
+
+    # Build and send the beta to hockey
+    sigh(username: ENV['ENTERPRISE_USER'],
+         app_identifier: "com.plainvanillagames.quizup.beta",
+         skip_install: true)
+    gym(scheme: "QuizUp Enterprise",
+        workspace: "QuizUp.xcworkspace",
+        clean: true)
+    # NOTE: hockey action will use the latest ipa and latest dsym built
+    hockey(
+        api_token: ENV['HOCKEY_APP_TOKEN'],
+        notes: "The Official QuizUp Beta",
+        public_identifier: ENV['HOCKEY_BETA_APP_ID'],
+        notify: false)
+    
+    clean_build_artifacts
+    
+    # Build and send the beta to Apple
+    sigh(username: ENV['DELIVER_USER'],
+         app_identifier: "com.plainvanillacorp.quizup",
+         skip_install: true)
+    gym(scheme: "QuizUp (App Store)",
+        workspace: "QuizUp.xcworkspace",
+        clean: true)
+    # NOTE: This hockey action will use the latest build.
+    hockey(
+        api_token: ENV['HOCKEY_APP_TOKEN'],
+        notes: "The Official QuizUp",
+        public_identifier: ENV['HOCKEY_APPSTORE_APP_ID'],
+        notify: false,
+        upload_dsym_only: true)
+        
+    deliver(force: true)
+
+    clean_build_artifacts
+
+    asana_releases_url = ENV["ASANA_RELEASES_URL"]
+
+    release_version_number = get_build_number(xcodeproj: 'QuizUp.xcodeproj')
+    
+    slack(
+      message: "iOS version #{release_version_number} submitted. \n\n See #{asana_releases_url} for details.",
+      channel: ENV["COMMUNITY_MANAGER_SLACK_CHANNEL"]
+    )
+
+    slack(
+      message: "iOS version #{release_version_number} submitted. \n\n See #{asana_releases_url} for details.",
+      channel: ENV["QA_SLACK_CHANNEL"]
+    )
+
+    slack(message: "Successfully submitted #{release_version_number}.")
+
+    add_git_tag(tag: "v#{release_version_number}")
+
+    push_to_git_remote
+  end
+
+  desc "Submits newest changes to Apple"
+  desc ""
+  desc "The designated submission lane"
+  desc "- Merges new changes from `master` into `release`"
+  desc "- Prepares a change log"
+  desc "- Calls `submit_ipa` lane"
+  lane :submit do
+    ensure_git_status_clean
+
+    merge_into_release
+
+    prepare_change_log
+
+    submit_ipa
+  end
+  
+  desc "Resubmits the the build"
+  desc ""
+  desc "- Calls `submit_ipa` lane"
+  lane :resubmit do
+    ensure_git_status_clean
+
+    submit_ipa
+  end
+
+  desc "Bumps version numbers"
+  desc ""
+  desc "- Only works on `master` branch"
+  desc "- Create as a new version number e.g. 2.1.8 -> 2.1.9 and 2.1.9 -> 2.2.0"
+  desc "- Commits and pushes new version number to master"
+  
+  lane :bump_version do
+    ensure_git_status_clean
+    ensure_git_branch(branch: "master")
+
+    new_version_number = prepare_new_version_number
+    commit_version_bump(message: "Release v#{new_version_number}",
+                        force:true)
+
+    push_to_git_remote
+  end
+
+##########################################################################################################
+
+  desc "Runs tests"
+  desc ""
+  desc "- Installs cocoapods"
+  desc "- Runs tests"
+  desc "- Cleanup" 
+  lane :test do
+    scan(device: "iPhone 6s")
+    
+    clean_build_artifacts
+  end
+
+  desc "Runs SwiftLint"
+  lane :swift_lint do
+    swiftlint
+  end
+  
+  error do |lane, exception|
+     slack(message: exception.message, success: false)
+  end
+
+end
