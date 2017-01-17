@@ -281,7 +281,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 - Project setup
 - Version Bump & Git Actions
 - Slack Notifications
-- Custom action for internal tranlsation tools
+- Custom action for internal translation tools
 - Custom action for versioning
 - Custom action for selecting changelogs
 

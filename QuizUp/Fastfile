@@ -201,7 +201,7 @@ platform :ios do
     submit_ipa
   end
   
-  desc "Resubmits the the build"
+  desc "Resubmits the build"
   desc ""
   desc "- Calls `submit_ipa` lane"
   lane :resubmit do
@@ -231,9 +231,8 @@ platform :ios do
 
   desc "Runs tests"
   desc ""
-  desc "- Installs cocoapods"
   desc "- Runs tests"
-  desc "- Cleanup" 
+  desc "- Cleans up artifacts" 
   lane :test do
     scan(device: "iPhone 6s")
     
