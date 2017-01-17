@@ -3,23 +3,23 @@ module Fastlane
     class PrepareChangeLogAction < Action
       def self.run(params)
         locales = ["de-DE", "en-US", "es-ES", "es-MX", "fr-FR", "pt-BR"]
-        localesWithMissingChangeLog = []
+        locales_with_missing_change_log = []
 
         locales.each do |locale|
-            remainingChangeLogsForLocale = self.check_line_count_for_change_log_file(locale)
-            if remainingChangeLogsForLocale == 0
-                localesWithMissingChangeLog.push(locale)
+            remaining_change_logs_for_file = self.check_line_count_for_change_log_file(locale)
+            if remaining_change_logs_for_file == 0
+                locales_with_missing_change_log.push(locale)
             end
         end
 
-        unless localesWithMissingChangeLog.empty?
-            missingChangeLogString = localesWithMissingChangeLog.join(', ')
-            UI.user_error!("Ran out of localized change logs in {#missingChangeLogString}")
+        unless locales_with_missing_change_log.empty?
+            missing_change_log_string = locales_with_missing_change_log.join(', ')
+            UI.user_error!("Ran out of localized change logs in {#missing_change_log_string}")
         end
 
         locales.each do |locale|
-            newChangeLog = self.get_change_log_from_file(locale)
-            self.set_new_change_log(locale, newChangeLog)
+            new_changelog = self.get_change_log_from_file(locale)
+            self.set_new_change_log(locale, new_changelog)
             self.remove_change_log_from_file(locale)
         end
         
