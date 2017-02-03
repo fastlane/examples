@@ -322,8 +322,8 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 - Has configuration for CI (Jenkins) to auto release to Hockeyapp, and auto unlock the keychain
 
 <p align="center">
-  <a href="/SHOP·COM">Overview</a> &bull; 
-  <a href="/SHOP·COM/Fastfile">Fastfile</a>
+  <a href="/Shop.com">Overview</a> &bull; 
+  <a href="/Shop.com/Fastfile">Fastfile</a>
 </p>
 ----
 
