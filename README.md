@@ -309,5 +309,23 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 </p>
 ----
 
+
+### [SHOP·COM](https://www.shop.com)
+[![fastlane Logo](Logos/SHOP.COM.png)](http://www.shop.com/mobile_app-v.xhtml)
+
+:bangbang: **Dual Platfrom Fastfile, Cordova project**
+
+- Configuration for both iOS and Android in the same Fastfile
+- Saves archives to a common build folder, sorted by date
+- Handles provisioning in a separate lane
+- Includes working configuration for building both iOS and Android native projects
+- Has configuration for CI (Jenkins) to auto release to Hockeyapp, and auto unlock the keychain
+
+<p align="center">
+  <a href="/Shop.com">Overview</a> &bull; 
+  <a href="/Shop.com/Fastfile">Fastfile</a>
+</p>
+----
+
 # Code of Conduct
 Help us keep `fastlane` open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastlane/code-of-conduct).

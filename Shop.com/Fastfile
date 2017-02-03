@@ -1,0 +1,148 @@
+fastlane_version "2.12.0"
+
+default_platform :ios
+
+app_name = "Shop"
+app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+
+platform :ios do
+
+  lane :development_profiles do
+    match(
+      type: 'development',
+      app_identifier: "#{app_identifier}"
+    )
+    match(
+      type: 'development',
+      app_identifier: "#{app_identifier}.MessagesExtension"
+    )
+  end
+
+  lane :appstore_profiles do
+    match(
+      type: 'appstore',
+      app_identifier: "#{app_identifier}"
+    )
+    match(
+      type: 'appstore',
+      app_identifier: "#{app_identifier}.MessagesExtension"
+    )
+  end
+
+  lane :profiles do
+    development_profiles
+    appstore_profiles
+  end
+
+  lane :build_development do
+    if is_ci?
+      unlock_keychain
+    end
+    development_profiles
+    gym(
+      clean: true,
+      configuration: "Debug",
+      output_directory: "builds/" + Time.now.strftime('%F'),
+      output_name: "#{app_name}-development.ipa",
+      project: "platforms/ios/#{app_name}.xcodeproj",
+      scheme: "#{app_name}",
+      toolchain: "swift_2_3"
+    )
+  end
+
+  lane :build_release do
+    if is_ci?
+      unlock_keychain
+    end
+    appstore_profiles
+    gym(
+      clean: true,
+      configuration: "Release",
+      output_directory: "builds/" + Time.now.strftime('%F'),
+      output_name: "#{app_name}-release.ipa",
+      project: "platforms/ios/#{app_name}.xcodeproj",
+      scheme: "#{app_name}",
+      toolchain: "swift_2_3"
+    )
+  end
+
+  lane :hockeyapp do |options|
+    hockey(
+      ipa: "builds/#{Time.now.strftime('%F')}/#{app_name}-#{(options[:release] ? "release" : "development")}.ipa",
+      dsym: "builds/#{Time.now.strftime('%F')}/#{app_name}-#{(options[:release] ? "release" : "development")}.app.dSYM.zip",
+      notes: "Build " + (ENV["BUILD_NUMBER"] ? ENV["BUILD_NUMBER"] + " " : "") + "From " + git_branch + " branch on " + Time.now.strftime('%F') + " at " + Time.now.strftime('%T'),
+      notify: "0"
+    )
+  end
+
+  lane :beta do
+    build_release
+    pilot
+  end
+
+  lane :release_app do
+    deliver(
+      ipa: "builds/#{Time.now.strftime('%F')}/#{app_name}-release.ipa",
+      force: true,
+      skip_metadata: true,
+      skip_screenshots: true
+    )
+  end
+end
+
+platform :android do
+
+  lane :build_development do
+    Dir.chdir ".." do
+      sh("platforms/android/cordova/clean")
+    end
+    gradle(
+      task: "cdvBuildDebug",
+      project_dir: "platforms/android/",
+      properties: {
+        'android.useDeprecatedNdk' => true
+      }
+    )
+    Dir.chdir ".." do
+      sh("mkdir -p builds/#{Time.now.strftime('%F')}/")
+      sh("cp -f platforms/android/build/outputs/apk/android-armv7-debug.apk builds/#{Time.now.strftime('%F')}/")
+      sh("cp -f platforms/android/build/outputs/apk/android-x86-debug.apk builds/#{Time.now.strftime('%F')}/")
+    end
+  end
+
+  lane :build_release do
+    Dir.chdir ".." do
+      sh("platforms/android/cordova/clean")
+    end
+    gradle(
+      task: "cdvBuildRelease",
+      project_dir: "platforms/android/",
+      properties: {
+        'android.useDeprecatedNdk' => true
+      }
+    )
+    Dir.chdir ".." do
+      sh("mkdir -p builds/#{Time.now.strftime('%F')}/")
+      sh("cp -f platforms/android/build/outputs/apk/android-armv7-release.apk builds/#{Time.now.strftime('%F')}/")
+      sh("cp -f platforms/android/build/outputs/apk/android-x86-release.apk builds/#{Time.now.strftime('%F')}/")
+    end
+  end
+
+  lane :hockeyapp do |options|
+    hockey(
+      apk: "builds/#{Time.now.strftime('%F')}/android-armv7-#{(options[:release] ? "release" : "debug")}.apk",
+      notes: "Build " + (ENV["BUILD_NUMBER"] ? ENV["BUILD_NUMBER"] + " " : "") + "From " + git_branch + " branch on " + Time.now.strftime('%F') + " at " + Time.now.strftime('%T'),
+      notify: "0"
+    )
+  end
+
+  lane :release_app do |options|
+    supply(
+      track: options[:track],
+      apk_paths: ["builds/#{Time.now.strftime('%F')}/android-x86-release.apk", "builds/#{Time.now.strftime('%F')}/android-armv7-release.apk"],
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
