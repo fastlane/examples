@@ -9,23 +9,23 @@ platform :ios do
 
   lane :development_profiles do
     match(
-        type: 'development',
-        app_identifier: "#{app_identifier}"
+      type: 'development',
+      app_identifier: "#{app_identifier}"
     )
     match(
-        type: 'development',
-        app_identifier: "#{app_identifier}.MessagesExtension"
+      type: 'development',
+      app_identifier: "#{app_identifier}.MessagesExtension"
     )
   end
 
   lane :appstore_profiles do
     match(
-        type: 'appstore',
-        app_identifier: "#{app_identifier}"
+      type: 'appstore',
+      app_identifier: "#{app_identifier}"
     )
     match(
-        type: 'appstore',
-        app_identifier: "#{app_identifier}.MessagesExtension"
+      type: 'appstore',
+      app_identifier: "#{app_identifier}.MessagesExtension"
     )
   end
 
