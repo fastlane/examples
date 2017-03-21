@@ -1,8 +1,3 @@
-require 'fileutils'
-
-
-# Uncomment the lines below you want to change by removing the # in the beginning
-
 # A list of devices you want to take the screenshots from
 devices([
   "iPhone 6",
@@ -27,35 +22,8 @@ languages([
   "cmn-Hans"
 ])
 
-# Where should the resulting screenshots be stored?
-screenshots_path "./screenshots"
-
-clear_previous_screenshots true
-
-# JavaScript UIAutomation file
-js_file './scripts/MindNode.js'
-
 # The name of the project's scheme
 scheme 'MindNode for iOS'
 
 # Where is your project (or workspace)? Provide the full path here
-project_path '../MindNode-iOS.xcworkspace'
-
-example_files = './ExampleDocuments'
-folder_name = "ExampleDocuments"
-
-setup_for_device_change do |lang, device|
-  # This will make sure, all example documents are installed on the simulator
-
-  puts "Copying example files to .app"
-
-  app_path = "/tmp/snapshot/build/MindNode.app/"
-
-  FileUtils.mkdir_p(File.join(app_path, folder_name))
-
-  Dir.glob(File.join(example_files, '*.mindnode')).each do |example_path|
-    puts "Copying '#{example_path}' to .app container"
-    to = File.join(app_path, folder_name)
-    FileUtils.cp_r(example_path, to) unless File.exist?(to)
-  end
-end
+project '../MindNode-iOS.xcworkspace'
