@@ -32,6 +32,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Acast/Snapfile">Snapfile</a> &bull;
   <a href="/Acast/screenshots/Framefile.json">Framefile</a>
 </p>
+
 ----
 
 ### [Timehop](https://timehop.com)
@@ -49,6 +50,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Timehop/">Overview</a> &bull;
   <a href="/Timehop/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 ### [Fitbay](https://fitbay.com)
@@ -68,6 +70,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Fitbay/">Overview</a> &bull;
   <a href="/Fitbay/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 ### [Fabric app](https://fabric.io/home)
@@ -86,6 +89,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Fabric/Snapfile">Snapfile</a> &bull;
   <a href="/Fabric/Appfile">Appfile</a>
 </p>
+
 ----
 
 ### [Artsy eidolon](https://github.com/artsy/eidolon)
@@ -103,6 +107,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Artsy/eidolon">Overview</a> &bull;
   <a href="/Artsy/eidolon/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 ### [Wikipedia](https://github.com/wikimedia/apps-ios-wikipedia/) by Wikimedia Foundation
@@ -123,6 +128,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/Wikipedia/Appfile">Appfile</a> &bull;
   <a href="/Wikipedia/metadata/">Metadata</a>
 </p>
+
 ---
 
 ### [SoundCloud](https://www.soundcloud.com)
@@ -140,6 +146,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/SoundCloud">Overview</a> &bull;
   <a href="/SoundCloud/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 ### [Firefox](https://github.com/mozilla/firefox-ios) by Mozilla
@@ -159,6 +166,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="https://github.com/mozilla/firefox-ios/blob/master/ClientUITests/snapshot/MarketingSnapshotTests.swift">SnapshotTests.swift</a> &bull;
   <a href="https://github.com/mozilla/firefox-ios-build-tools/tree/master/fastlane/actions">Custom Actions</a>
 </p>
+
 ----
 
 ### [MindNode](https://mindnode.com/)
@@ -183,6 +191,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/MindNode/screenshots/Framefile.json">Framefile.json</a> &bull;
   <a href="/MindNode/mac">MacScreenshots</a>
 </p>
+
 ----
 
 ### [Product Hunt](https://www.producthunt.com/apps/ios)
@@ -201,6 +210,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/ProductHunt/Deliverfile">Deliverfile</a> &bull;
   <a href="/ProductHunt/metadata">metadata</a>
 </p>
+
 ----
 
 
@@ -220,6 +230,7 @@ This repository contains a few `fastlane` example setups that help you getting s
   <a href="/BeMyEyes/Deliverfile">Deliverfile</a> &bull;
   <a href="/BeMyEyes/actions/get_global_value.rb">get_global_value</a>
 </p>
+
 ----
 
 ### [SunApps](https://sunapps.net)
@@ -244,6 +255,7 @@ A description on how the setup works is available in the [Overview](/SunApps).
   <a href="/SunApps/Appfile">Appfile</a> &bull;
   <a href="/SunApps/snapshot.js">snapshot.js</a>
 </p>
+
 ----
 
 ### [Touchwonders](http://touchwonders.com)
@@ -265,6 +277,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="/Touchwonders/Fastfile">Fastfile</a> &bull;
   <a href="/Touchwonders/fastlane_config.yaml">Configuration file</a>
 </p>
+
 ----
 
 ### [QuizUp](https://www.quizup.com)
@@ -289,6 +302,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="/QuizUp">Overview</a> &bull;
   <a href="/QuizUp/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 
@@ -307,6 +321,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="https://github.com/fastlane/fastlane/tree/master/fastlane">Overview</a> &bull; 
   <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 
@@ -325,6 +340,7 @@ A description on how the setup works is available in the [Overview](/Touchwonder
   <a href="/Shop.com">Overview</a> &bull; 
   <a href="/Shop.com/Fastfile">Fastfile</a>
 </p>
+
 ----
 
 # Code of Conduct
