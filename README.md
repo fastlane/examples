@@ -20,6 +20,8 @@ This repository contains a few `fastlane` example setups that help you getting s
   - Text and device frames are added to screenshots using [frameit](https://github.com/fastlane/frameit)
   - Delivered to iTunes Connect using [deliver](https://github.com/fastlane/deliver)
 - Submission to App Store using [gym](https://github.com/fastlane/gym) and [deliver](https://github.com/fastlane/deliver)
+- A `setup` lane that helps us onboard new colleagues and set up new development machines
+- Version lanes that helps us to bump our current version number quickly and correctly
 
 <p align="center">
   <a href="/Acast/">Overview</a> &bull;

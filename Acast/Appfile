@@ -1,1 +1,3 @@
-apple_id "jagcesar@example.com" # Your Apple email address
+apple_id ENV["DEVELOPER_EMAIL"] # Your Apple email address
+team_id "EW6V7PFV42" # Developer Portal Team ID
+itc_team_id "58455827" # iTunes Connect Team ID

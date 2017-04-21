@@ -1,3 +1,4 @@
-username "jagcesar@example.com" # the iTunes Connect login email address
-
 copyright "#{Time.now.year} Acast AB"
+
+automatic_release false
+app_identifier "com.acast.app.native.production"
