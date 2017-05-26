@@ -1,0 +1,4 @@
+$self_workspace="App.xcworkspace"
+$self_scheme="Appscheme"
+$self_idfs = [ "app.idf-app", "app.idf.today" ]
+import_from_git(url: "git@shared-repo")
