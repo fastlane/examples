@@ -11,9 +11,9 @@ development:
   targets: # A collection of all project's targets. This is useful when fetching provisioning profiles for each of them
    - target_identifier: PROJECT # Convenience identifier. This is choose by you and reuse it in your Fastfile.
      app_identifier: com.touchwonders.awesomeapp.development # Bundle identifier for current target
-   - targetidentifier: WATCHKIT_EXTENSION
+   - target_identifier: WATCHKIT_EXTENSION
      app_identifier: com.touchwonders.awesomeapp.development.watchkitextension
-   - targetidentifier: WATCH_APP
+   - target_identifier: WATCH_APP
      app_identifier: com.touchwonders.awesomeapp.development.watchapp
 
 stable:
@@ -25,7 +25,7 @@ stable:
   targets:
    - target_identifier: PROJECT
      app_identifier: com.touchwonders.awesomeapp.stable
-   - targetidentifier: WATCHKIT_EXTENSION
+   - target_identifier: WATCHKIT_EXTENSION
      app_identifier: com.touchwonders.awesomeapp.stable.watchkitextension
-   - targetidentifier: WATCH_APP
+   - target_identifier: WATCH_APP
      app_identifier: com.touchwonders.awesomeapp.stable.watchapp
