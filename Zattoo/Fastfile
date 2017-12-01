@@ -1,6 +1,5 @@
-fastlane_version "1.91.0"
+fastlane_version "2.66.2"
 
-require './helpers/xcode_project_helpers.rb'
 require './helpers/zattoo.rb'
 
 #### Setup ####
@@ -64,7 +63,7 @@ end
 desc "Release build to TestFlight"
 lane :release do
   ensure_git_status_clean
-  increment_build(app_identifier: Zattoo::AppIdentifier::Production) 
+  increment_build(app_identifier: Zattoo::AppIdentifier::Production)
   gym
   pilot
   post_to_slack(message: "New *Zattoo* available in TestFlight", success: true)
@@ -75,7 +74,7 @@ desc "Release a Preview version to TestFlight"
 lane :release_preview do
   ensure_git_status_clean
   setup_preview
-  increment_build(app_identifier: Zattoo::AppIdentifier::Preview) 
+  increment_build(app_identifier: Zattoo::AppIdentifier::Preview)
   setup_preview_provisioning_profiles
   gym
   pilot
@@ -115,7 +114,7 @@ end
 
 private_lane :post_to_slack do |options|
   if ENV["SLACK_URL"]
-    message = options[:message] 
+    message = options[:message]
     success = options[:success]
     slack(message: ":tv: tvOS: " + message + (success ? " :beers:" : " :bomb:"), success: success)
   end
@@ -143,7 +142,7 @@ private_lane :setup_preview_display_name do
 end
 
 private_lane :setup_preview_provisioning_profiles do
-  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::Preview) 
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::Preview)
   update_provisioning_profile_specifier(profile_specifier: Zattoo::TopShelfProvisioningProfiles::Preview, target_name: 'TopShelfExtension')
 end
 
@@ -164,7 +163,7 @@ private_lane :setup_applestore_display_name do
 end
 
 private_lane :setup_applestore_provisioning_profiles do
-  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::AppleStore) 
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::AppleStore)
   update_provisioning_profile_specifier(profile_specifier: Zattoo::TopShelfProvisioningProfiles::AppleStore, target_name: 'TopShelfExtension')
 end
 
