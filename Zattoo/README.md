@@ -20,11 +20,6 @@ Fetches distribution certificates and provisioning profiles
 fastlane update_devices
 ```
 Update device list
-### install_xcode_plugins
-```
-fastlane install_xcode_plugins
-```
-Install Xcode plugins
 ### update_localizable_strings
 ```
 fastlane update_localizable_strings

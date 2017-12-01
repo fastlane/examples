@@ -26,11 +26,6 @@ lane :update_devices do
   register_devices(devices_file: 'fastlane/devices.txt', team_id: Zattoo::TeamId)
 end
 
-desc "Install Xcode plugins"
-lane :install_xcode_plugins do
-  install_xcode_plugin(github: 'https://github.com/neonichu/FixCode')
-end
-
 desc "Update localizable strings from webtranslate"
 lane :update_localizable_strings do
   sh "helpers/updateLocalizableStrings.sh"
