@@ -59,7 +59,7 @@ lane :release do
   ensure_git_status_clean
   increment_build(app_identifier: Zattoo::AppIdentifier::Production)
   gym
-  pilot
+  pilot(app_platform: 'appletvos')
   post_to_slack(message: "New *Zattoo* available in TestFlight", success: true)
   reset_git_repo
 end
@@ -71,7 +71,7 @@ lane :release_preview do
   increment_build(app_identifier: Zattoo::AppIdentifier::Preview)
   setup_preview_provisioning_profiles
   gym
-  pilot
+  pilot(app_platform: 'appletvos')
   post_to_slack(message: "New *Zattoo Preview* available in TestFlight", success: true)
   reset_git_repo
 end
@@ -83,7 +83,7 @@ lane :release_applestore do
   increment_build(app_identifier: Zattoo::AppIdentifier::AppleStore)
   setup_applestore_provisioning_profiles
   gym
-  pilot
+  pilot(app_platform: 'appletvos')
   post_to_slack(message: "New *Zattoo AppleStore* available in TestFlight", success: true)
   reset_git_repo
 end
@@ -171,7 +171,7 @@ end
 
 private_lane :increment_build do |options|
   increment_build_number({
-    build_number: latest_testflight_build_number(app_identifier: options[:app_identifier]) + 1
+    build_number: latest_testflight_build_number(app_identifier: options[:app_identifier], platform: 'appletvos') + 1
   })
 end
 
