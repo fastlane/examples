@@ -105,7 +105,7 @@ error do |lane, exception|
 end
 
 #### Private ####
-#
+
 private_lane :run_tests do |opts|
   cocoapods(repo_update: true)
   scan(scheme: opts[:scheme])
