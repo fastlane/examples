@@ -34,23 +34,17 @@ end
 
 desc "Run all Zattoo TV Tests: Unit, UI, and Top Shelf Extension"
 lane :tests do
-  cocoapods(repo_update: true)
-  scan
-  post_to_slack(message: "*Unit, UI, and Top Shelf Extension Tests*: All tests successfully passed", success: true)
+  run_tests(message: "Unit, UI, and Top Shelf")
 end
 
 desc "Run Unit tests"
 lane :unit_tests do
-  cocoapods(repo_update: true)
-  scan(scheme: "ZattooTests")
-  post_to_slack(message: "*Unit Tests*: All tests successfully passed", success: true)
+  run_tests(message: "Unit", scheme: "ZattooTests")
 end
 
 desc "Run UI Tests"
 lane :ui_tests do
-  cocoapods(repo_update: true)
-  scan(scheme: "ZattooUITests")
-  post_to_slack(message: "*UI Tests*: All tests successfully passed", success: true)
+  run_tests(message: "UI", scheme: "ZattooUITests")
 end
 
 desc "Check style and conventions"
@@ -111,6 +105,12 @@ error do |lane, exception|
 end
 
 #### Private ####
+#
+private_lane :run_tests do |opts|
+  cocoapods(repo_update: true)
+  scan(scheme: opts[:scheme])
+  post_to_slack(message: "*#{opts[:message]} Tests*: All tests successfully passed", success: true)
+end
 
 private_lane :post_to_slack do |options|
   if ENV["SLACK_URL"]
