@@ -1,0 +1,177 @@
+fastlane_version "2.66.2"
+
+require './helpers/zattoo.rb'
+
+#### Setup ####
+
+desc "Fetches development certificates and provisioning profiles"
+lane :fetch_dev_certificates do
+  match(type: 'development', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::AppIdentifier::Production)
+  match(type: 'development', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::TopShelfAppIdentifier::Production)
+end
+
+desc "Fetches distribution certificates and provisioning profiles"
+lane :fetch_distribution_certificates do
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::AppIdentifier::Preview)
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::AppIdentifier::AppleStore)
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::AppIdentifier::Production)
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::TopShelfAppIdentifier::Preview)
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::TopShelfAppIdentifier::AppleStore)
+  match(type: 'appstore', readonly: true, team_id: Zattoo::TeamId, app_identifier: Zattoo::TopShelfAppIdentifier::Production)
+end
+
+desc "Update device list"
+lane :update_devices do
+  register_devices(devices_file: 'fastlane/devices.txt', team_id: Zattoo::TeamId)
+end
+
+desc "Update localizable strings from webtranslate"
+lane :update_localizable_strings do
+  sh "helpers/updateLocalizableStrings.sh"
+end
+
+#### Tests ####
+
+desc "Run all Zattoo TV Tests: Unit, UI, and Top Shelf Extension"
+lane :tests do
+  run_tests(message: "Unit, UI, and Top Shelf")
+end
+
+desc "Run Unit tests"
+lane :unit_tests do
+  run_tests(message: "Unit", scheme: "ZattooTests")
+end
+
+desc "Run UI Tests"
+lane :ui_tests do
+  run_tests(message: "UI", scheme: "ZattooUITests")
+end
+
+desc "Check style and conventions"
+lane :lint do
+  swiftlint(strict: true)
+end
+
+#### Releases ####
+
+desc "Release build to TestFlight"
+lane :release do
+  ensure_git_status_clean
+  increment_build(app_identifier: Zattoo::AppIdentifier::Production)
+  gym
+  pilot(app_platform: 'appletvos')
+  post_to_slack(message: "New *Zattoo* available in TestFlight", success: true)
+  reset_git_repo
+end
+
+desc "Release a Preview version to TestFlight"
+lane :release_preview do
+  ensure_git_status_clean
+  setup_preview
+  increment_build(app_identifier: Zattoo::AppIdentifier::Preview)
+  setup_preview_provisioning_profiles
+  gym
+  pilot(app_platform: 'appletvos')
+  post_to_slack(message: "New *Zattoo Preview* available in TestFlight", success: true)
+  reset_git_repo
+end
+
+desc "Release a new version for boxes on the Apple Stores"
+lane :release_applestore do
+  ensure_git_status_clean
+  setup_applestore
+  increment_build(app_identifier: Zattoo::AppIdentifier::AppleStore)
+  setup_applestore_provisioning_profiles
+  gym
+  pilot(app_platform: 'appletvos')
+  post_to_slack(message: "New *Zattoo AppleStore* available in TestFlight", success: true)
+  reset_git_repo
+end
+
+desc "Generate screenshots"
+lane :screenshots do
+  snapshot
+end
+
+#### Error management ####
+
+error do |lane, exception|
+  case lane
+  when :lint then post_to_slack(message: "Linter finished with errors", success: false)
+  when :unit_tests then post_to_slack(message: "UnitTests finished with errors", success: false)
+  when :ui_tests then post_to_slack(message: "UITests finished with errors", success: false)
+  else post_to_slack(message: "Finished with errors", success: false)
+  end
+end
+
+#### Private ####
+
+private_lane :run_tests do |opts|
+  cocoapods(repo_update: true)
+  scan(scheme: opts[:scheme])
+  post_to_slack(message: "*#{opts[:message]} Tests*: All tests successfully passed", success: true)
+end
+
+private_lane :post_to_slack do |options|
+  if ENV["SLACK_URL"]
+    message = options[:message]
+    success = options[:success]
+    slack(message: ":tv: tvOS: " + message + (success ? " :beers:" : " :bomb:"), success: success)
+  end
+end
+
+#### Configuration for ZattooPreview ####
+
+private_lane :setup_preview do
+  setup_preview_icon
+  setup_preview_display_name
+  setup_preview_app_identifier
+end
+
+private_lane :setup_preview_icon do
+  sh "helpers/setupPreviewIcon.sh"
+end
+
+private_lane :setup_preview_app_identifier do
+  update_app_identifier(plist_path: "Zattoo/Resources/Info.plist", app_identifier: Zattoo::AppIdentifier::Preview)
+  update_app_identifier(plist_path: "TopShelfExtension/Resources/Info.plist", app_identifier: Zattoo::TopShelfAppIdentifier::Preview)
+end
+
+private_lane :setup_preview_display_name do
+  update_info_plist(plist_path: "Zattoo/Resources/Info.plist", display_name: Zattoo::DisplayName::Preview)
+end
+
+private_lane :setup_preview_provisioning_profiles do
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::Preview)
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::TopShelfProvisioningProfiles::Preview, target_name: 'TopShelfExtension')
+end
+
+#### Configuration for AppleStore ####
+
+private_lane :setup_applestore do
+  setup_applestore_display_name
+  setup_applestore_app_identifier
+end
+
+private_lane :setup_applestore_app_identifier do
+  update_app_identifier(plist_path: "Zattoo/Resources/Info.plist", app_identifier: Zattoo::AppIdentifier::AppleStore)
+  update_app_identifier(plist_path: "TopShelfExtension/Resources/Info.plist", app_identifier: Zattoo::TopShelfAppIdentifier::AppleStore)
+end
+
+private_lane :setup_applestore_display_name do
+  update_info_plist(plist_path: "Zattoo/Resources/Info.plist", display_name: Zattoo::DisplayName::AppleStore)
+end
+
+private_lane :setup_applestore_provisioning_profiles do
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::ProvisioningProfiles::AppleStore)
+  update_provisioning_profile_specifier(profile_specifier: Zattoo::TopShelfProvisioningProfiles::AppleStore, target_name: 'TopShelfExtension')
+end
+
+#### Common ####
+
+private_lane :increment_build do |options|
+  increment_build_number({
+    build_number: latest_testflight_build_number(app_identifier: options[:app_identifier], platform: 'appletvos') + 1
+  })
+end
+

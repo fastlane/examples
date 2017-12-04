@@ -323,5 +323,23 @@ A description on how the setup works is available in the [Overview](/Touchwonder
 
 ----
 
+### [Zattoo](https://zattoo.com)
+[![Zattoo](Logos/Zattoo.png)](https://zattoo.com)
+
+:tv: **Setup for tvOS**
+
+- App Store and Testflight deployments
+- Certificates and Provisioning Profiles management
+- Provision of Localizable strings
+- Deployment of Preview and Promotional releases
+- Unit and UI testing lanes for Travis
+- Linter
+
+<p align="center">
+  <a href="/Zattoo/">Overview</a> &bull;
+  <a href="/Zattoo/Fastfile">Fastfile</a>
+</p>
+----
+
 # Code of Conduct
 Help us keep `fastlane` open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastlane/code-of-conduct).
