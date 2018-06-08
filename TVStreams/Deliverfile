@@ -1,0 +1,4 @@
+release_notes({
+  'default' => "Write here the release notes",
+  'en-US' => "Write here the release notes",
+})
