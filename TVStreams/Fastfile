@@ -1,0 +1,27 @@
+fastlane_require 'dotenv'
+
+desc "Push a new release build to the App Store"
+lane :upload do
+  cocoapods(clean: true,
+            repo_update: true)
+  run_tests(workspace: ENV['WORKSPACE'],
+            scheme: ENV['SCHEME'])
+  increment_version_number(version_number: ENV['APP_VERSION'])
+  build_number = 1 + latest_testflight_build_number(app_identifier: ENV['APP_IDENTIFIER'],
+                                                    platform: ENV['PLATFORM'],
+                                                    version: ENV['APP_VERSION'])
+  increment_build_number(build_number: build_number,
+                          xcodeproj: ENV['PROJECT'])
+  build_app(workspace: ENV['WORKSPACE'],
+            scheme: ENV['SCHEME'],
+            configuration: "Release",
+            clean: true,
+            export_method: "app-store")
+  upload_to_app_store(submit_for_review: true,
+                      force: true,
+                      automatic_release: true,
+                      platform: ENV['PLATFORM'],
+                      app_identifier: ENV['APP_IDENTIFIER'],
+                      app_version: ENV['APP_VERSION'],
+                      run_precheck_before_submit: true)
+end

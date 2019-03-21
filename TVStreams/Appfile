@@ -1,0 +1,4 @@
+app_identifier(ENV['APP_IDENTIFIER']) # The bundle identifier of your app
+apple_id("") # Your Apple email address
+itc_team_id("") # iTunes Connect Team ID
+team_id("") # Developer Portal Team ID
